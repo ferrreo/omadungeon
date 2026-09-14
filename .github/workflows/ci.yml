@@ -35,7 +35,11 @@ jobs:
     steps:
       - name: Install toolchain
         run: |
-          pacman -Syu --noconfirm godot python python-pip git rsync sway mesa
+          # seatd: sway refuses to start without a seat manager ("session activation
+          # permission failures"), which is what the rendered tier runs inside. It is an
+          # optional dependency of sway, so a container gets neither it nor a warning that
+          # matters until the compositor fails to come up.
+          pacman -Syu --noconfirm godot python python-pip git rsync sway mesa seatd
           pip install --break-system-packages "gdtoolkit==4.*"
 
       - uses: actions/checkout@v4
@@ -93,8 +97,9 @@ jobs:
       - name: Install toolchain
         run: |
           apt-get update
+          # python3: tools/run-checks.sh is the register runner and is written in it.
           apt-get install -y --no-install-recommends \
-            ca-certificates curl unzip xz-utils dpkg-dev fakeroot binutils
+            ca-certificates curl unzip xz-utils dpkg-dev fakeroot binutils python3
           # The runtime libraries the packages depend on. They are installed
           # here for two reasons: tools/check-deb-deps.sh can only map a SONAME
           # to a package that is present, and apt refuses a name that does not

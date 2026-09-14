@@ -45,6 +45,13 @@ if [[ -z "$socket" || ! -S "$XDG_RUNTIME_DIR/$socket" ]]; then
   kept="$out_dir/sway-failed-$$.log"
   cp "$log" "$kept" 2>/dev/null || true
   echo "sway failed to start; see $kept" >&2
+  # ...and say why here as well. The kept copy is worth nothing on a CI runner, where the
+  # log is not an artifact and the container is gone by the time anyone reads the failure:
+  # "sway failed to start" on its own cost a full round trip to learn it was a missing seat
+  # manager. The compositor's own words are short and they are the whole diagnosis.
+  echo "--- sway log ---" >&2
+  tail -n 40 "$log" >&2 || true
+  echo "--- end sway log ---" >&2
   exit 1
 fi
 export WAYLAND_DISPLAY="$socket"
