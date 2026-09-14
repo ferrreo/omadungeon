@@ -1,6 +1,6 @@
 # Maintainer: ferreo <ferreo@pika-os.com>
 pkgname=omadungeon
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Procedural rogue-like dungeon crawler skinned by your Omarchy theme"
 arch=('x86_64')

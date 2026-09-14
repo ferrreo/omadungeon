@@ -1,3 +1,13 @@
+omadungeon (0.1.1-1) unstable; urgency=medium
+
+  * Arch package depends on libpulse rather than the pulseaudio daemon, which
+    conflicts with pipewire-pulse; this also fixes audio dropping out on Arch.
+  * A desktop theme swap applies once instead of on every poll: the debounce was
+    shorter than the poll interval feeding it, so it coalesced nothing.
+  * Wallpaper measurements are cached by path and modified time.
+
+ -- ferrreo <harderthanfire@gmail.com>  Mon, 14 Sep 2026 21:30:00 +0100
+
 omadungeon (0.1.0-1) unstable; urgency=medium
 
   * Initial release.
