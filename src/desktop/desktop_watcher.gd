@@ -6,7 +6,15 @@ extends Node
 enum Source { FALLBACK, OMARCHY, OTTER }
 
 const POLL_INTERVAL := 0.3
-const DEBOUNCE := 0.15
+## Quiet time after the last observed change before the swap is applied.
+##
+## This MUST be longer than `POLL_INTERVAL` or it debounces nothing: at 0.15 s the timer
+## always expired before the next poll could see the next file land, so switching an Omarchy
+## theme - which rewrites the theme link, colors.toml, the background and the hook over a
+## couple of seconds - applied a full retint *and* a wallpaper decode on every single poll.
+## The owner's report was "it lags like shit when I swap omarchy theme for a few seconds";
+## that was roughly seven swaps, not one.
+const DEBOUNCE := 0.45
 const HOOK_FILE := "omadungeon/theme-changed"
 
 var palette: ThemePalette
@@ -23,7 +31,14 @@ var _poll_left: float = 0.0
 var _analysis_task: int = -1
 var _analysis_result: WallpaperAnalyzer.Result
 var _analysis_path: String = ""
+var _analysis_key: String = ""
 var _analysis_mutex := Mutex.new()
+## Results already measured, keyed by "<path>|<modified time>". Analysing a wallpaper means
+## decoding it at full resolution before it is sampled down, which is the most expensive
+## thing a theme swap does; swapping between two themes, or back to one seen a minute ago,
+## would otherwise pay it again every time. The key carries the mtime so editing a wallpaper
+## in place still re-measures it.
+var _analysis_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -169,9 +184,14 @@ func _start_wallpaper_analysis() -> void:
 	if path.is_empty() or not FileAccess.file_exists(path):
 		wallpaper = null
 		return
+	var key := "%s|%d" % [path, FileAccess.get_modified_time(path)]
+	if _analysis_cache.has(key):
+		wallpaper = _analysis_cache[key] as WallpaperAnalyzer.Result
+		return
 	if _analysis_task >= 0:
 		return
 	_analysis_path = path
+	_analysis_key = key
 	_analysis_task = WorkerThreadPool.add_task(_analyze_in_thread.bind(path), false, "wallpaper")
 
 
@@ -191,6 +211,9 @@ func _collect_analysis() -> void:
 	wallpaper = _analysis_result
 	_analysis_result = null
 	_analysis_mutex.unlock()
+	if wallpaper != null and not _analysis_key.is_empty():
+		_analysis_cache[_analysis_key] = wallpaper
+	_analysis_key = ""
 	if wallpaper != null:
 		EventBus.desktop_changed.emit(EventBus.DesktopChangeKind.WALLPAPER)
 

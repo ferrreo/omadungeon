@@ -6,7 +6,18 @@ pkgdesc="Procedural rogue-like dungeon crawler skinned by your Omarchy theme"
 arch=('x86_64')
 url="https://github.com/ferrreo/omadungeon"
 license=('BSD-3-Clause')
-depends=('glibc' 'libx11' 'libxcursor' 'libxinerama' 'libxi' 'libxrandr' 'alsa-lib' 'pulseaudio' 'mesa' 'wayland' 'libxkbcommon')
+# libpulse, not pulseaudio: the engine dlopens libpulse.so.0, which is the client
+# library. `pulseaudio` is the daemon and it conflicts with pipewire-pulse, so depending
+# on it drags a PipeWire system off PipeWire to satisfy a library it already has.
+depends=('glibc' 'libx11' 'libxcursor' 'libxinerama' 'libxi' 'libxrandr' 'libxext'
+         'libxrender' 'alsa-lib' 'libpulse' 'mesa' 'wayland' 'libxkbcommon' 'systemd-libs')
+# Everything the engine only reaches for if it is there, mirroring the Recommends and
+# Suggests the Debian package derives from the same binary.
+optdepends=('libdecor: client-side decorations on Wayland'
+            'dbus: desktop integration'
+            'fontconfig: system fonts'
+            'vulkan-icd-loader: Vulkan rendering'
+            'speech-dispatcher: screen-reader support')
 makedepends=('godot' 'git')
 source=("git+$url.git#tag=v$pkgver")
 sha256sums=('SKIP')
