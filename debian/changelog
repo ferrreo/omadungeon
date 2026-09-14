@@ -1,3 +1,11 @@
+omadungeon (0.1.2-1) unstable; urgency=medium
+
+  * A desktop theme swap no longer stalls the game for seconds: the UI theme is
+    written once at the end of the retint rather than on every frame of it, so
+    Controls are not re-resolved 36 times over a 0.6 s fade.
+
+ -- ferrreo <harderthanfire@gmail.com>  Sun, 14 Sep 2026 22:05:00 +0100
+
 omadungeon (0.1.1-1) unstable; urgency=medium
 
   * Arch package depends on libpulse rather than the pulseaudio daemon, which
