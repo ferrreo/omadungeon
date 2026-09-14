@@ -19,6 +19,9 @@ var icons: Texture2D
 var ability_icons: Texture2D
 var icon_cache: Dictionary = {}
 var theme_connected: bool = false
+## Controls the shared theme has been handed to (`UiTheme.apply`). Held so a write can take
+## the theme off them first: see `UiTheme._write`.
+var themed: Array[Control] = []
 ## Cache of `UiTheme.signal_color` results; cleared on every theme write.
 var signal_colors: Dictionary = {}
 

@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Install toolchain
         run: |
-          pacman -Syu --noconfirm godot python python-pip git rsync sway wlroots mesa
+          pacman -Syu --noconfirm godot python python-pip git rsync sway mesa
           pip install --break-system-packages "gdtoolkit==4.*"
 
       - uses: actions/checkout@v4
