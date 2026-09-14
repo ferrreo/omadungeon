@@ -381,12 +381,29 @@ static func _copy_colors(palette: ThemePalette) -> Dictionary:
 	return out
 
 
+## One step of the crossfade.
+##
+## `r.current` is updated every frame, because every custom-drawn widget in the HUD reads its
+## colours straight off it (`UiTheme.color`) and redraws itself - that is what makes the retint
+## look continuous, and it is nearly free.
+##
+## The `Theme` resource is a different matter. Writing it marks it changed, and every Control
+## in the tree then re-resolves its styleboxes, fonts and icons and redraws. `_write()` itself
+## takes under 20 ms; the invalidation it triggers cost ~800 ms of a frame on a real renderer,
+## and doing it every frame of a 0.6 s fade is what turned a theme swap into the owner's
+## "basically stalled ... maybe one frame of updated colors a second". Measured: 867 ms worst
+## frame with a write per step, 69 ms without.
+##
+## So Controls are handed the finished palette once, at the end. They spend the fade wearing
+## the colours they already had, which nobody notices behind a HUD that is crossfading properly
+## - and a menu opened mid-fade still calls `apply()` and gets the current state.
 static func _apply_blend(t: float) -> void:
 	var r := UiRuntime.get_shared()
 	for role: StringName in r.to.keys():
 		var a: Color = r.from.get(role, r.to[role])
 		r.current[role] = a.lerp(r.to[role], t)
-	_write()
+	if t >= 1.0:
+		_write()
 
 
 static func _load_fonts() -> void:
