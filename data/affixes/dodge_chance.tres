@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FractionAffix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/fraction_affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"dodge_chance"
+stat = &"dodge_chance"
+mode = 0
+min_value = 0.02
+max_value = 0.06
+prefix = "Elusive"
+suffix = "of Shadows"
+slots = Array[StringName]([&"armor", &"trinket"])
+weight = 0.6
+status_kind = 0
+min_rarity = 1

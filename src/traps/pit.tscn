@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://01met3rwa1ws"]
+
+[ext_resource type="Script" uid="uid://d0krpepjkr75h" path="res://src/traps/pit.gd" id="1_script"]
+
+[node name="Pit" type="Node2D"]
+script = ExtResource("1_script")

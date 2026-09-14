@@ -1,0 +1,26 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/actives/frost_nova.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(16, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"frost_nova"
+display_name = "Frost Nova"
+description = "A chilling burst around you. Stacks frost toward a freeze."
+kind = 0
+max_tier = 3
+class_only = &""
+weight = 1.0
+cooldown = 9.0
+damage = 16.0
+tags = Array[StringName]([&"ability", &"frost"])
+icon = SubResource("AtlasTexture_icon")
+radius = 40.0
+knockback = 50.0
+frost_duration = 3.0
+frost_stacks = 1

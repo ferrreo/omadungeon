@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Biome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/biome.gd" id="1_biome"]
+
+[resource]
+script = ExtResource("1_biome")
+id = &"forge"
+display_name = "Forge"
+floor_min = 3
+floor_max = 5
+trap_kinds = Array[StringName]([&"fire_vent", &"arrow_wall", &"pressure_plate", &"spike_floor", &"mimic_chest"])
+prop_kinds = Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"anvil", &"cart", &"brazier", &"chain", &"slag"])
+palette_keys = PackedStringArray("orange", "red")
+tileset_path = "res://assets/tiles/forge.png"
+fill_templates = Array[StringName]([])
+hazard_weight = 1.2
+lantern_spacing = 8

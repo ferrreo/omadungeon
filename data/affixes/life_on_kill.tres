@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Affix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"life_on_kill"
+stat = &"life_on_kill"
+mode = 0
+min_value = 2.0
+max_value = 6.0
+prefix = "Leeching"
+suffix = "of Sustenance"
+slots = Array[StringName]([&"weapon", &"ring", &"trinket"])
+weight = 0.8
+status_kind = 0
+min_rarity = 1

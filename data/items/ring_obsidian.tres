@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemBase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/item_base.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"ring_obsidian"
+display_name = "Obsidian Ring"
+slot = 2
+implicit_flat = {
+&"arcana": 2.0
+}
+implicit_percent = {}
+min_floor = 3
+weight = 0.8
+proc_sprite_family = &"ring"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemBase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/item_base.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"compass"
+display_name = "Compass"
+slot = 3
+implicit_flat = {
+&"pickup_radius": 12.0
+}
+implicit_percent = {
+&"move_speed": 0.05
+}
+min_floor = 1
+weight = 0.9
+proc_sprite_family = &"trinket"

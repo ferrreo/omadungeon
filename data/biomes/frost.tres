@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Biome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/biome.gd" id="1_biome"]
+
+[resource]
+script = ExtResource("1_biome")
+id = &"frost"
+display_name = "Frost"
+floor_min = 3
+floor_max = 5
+trap_kinds = Array[StringName]([&"ice_slide", &"spike_floor", &"arrow_wall", &"pressure_plate", &"mimic_chest"])
+prop_kinds = Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"ice_block", &"lantern", &"snowman", &"boulder", &"snow"])
+palette_keys = PackedStringArray("cyan", "bright_blue")
+tileset_path = "res://assets/tiles/frost.png"
+fill_templates = Array[StringName]([&"empty", &"pillars", &"cross", &"ring", &"rubble"])
+hazard_weight = 0.9
+lantern_spacing = 11

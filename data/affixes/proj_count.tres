@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Affix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"proj_count"
+stat = &"projectile_count"
+mode = 0
+min_value = 1.0
+max_value = 1.0
+prefix = "Twin"
+suffix = "of Multiplicity"
+slots = Array[StringName]([&"weapon", &"trinket"])
+weight = 0.35
+status_kind = 0
+min_rarity = 2
+weapon_styles = Array[int]([2, 3, 4])

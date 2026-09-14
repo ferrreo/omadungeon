@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7y2xid5arqqa"]
+
+[ext_resource type="Script" uid="uid://bap3ah64xp3wl" path="res://src/traps/kernel_spike.gd" id="1_script"]
+
+[node name="KernelSpike" type="Node2D"]
+script = ExtResource("1_script")

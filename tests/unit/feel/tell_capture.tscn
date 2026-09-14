@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://lxd7hpbq3864" path="res://tests/unit/feel/tell_capture.gd" id="1_capture"]
+
+[node name="FeelTellCapture" type="Node"]
+script = ExtResource("1_capture")

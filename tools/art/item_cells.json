@@ -1,0 +1,32 @@
+{
+  "weapons": [
+    "rusty_sword",
+    "longsword",
+    "axe",
+    "spear",
+    "dagger",
+    "shortbow",
+    "crossbow",
+    "wand",
+    "staff",
+    "throwing_knives",
+    "golden_cane",
+    "fists",
+    "greatsword",
+    "executioner_axe",
+    "glaive",
+    "stiletto",
+    "longbow",
+    "archmage_staff",
+    "runed_staff",
+    "chakrams"
+  ],
+  "armor": [
+    "leather_jerkin",
+    "shadow_weave",
+    "chain_mail",
+    "scale_hauberk",
+    "iron_plate",
+    "adamant_plate"
+  ]
+}

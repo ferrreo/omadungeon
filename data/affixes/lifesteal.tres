@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FractionAffix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/fraction_affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"lifesteal"
+stat = &"lifesteal"
+mode = 0
+min_value = 0.02
+max_value = 0.05
+prefix = "Vampiric"
+suffix = "of Thirst"
+slots = Array[StringName]([&"weapon", &"ring"])
+weight = 0.5
+status_kind = 0
+min_rarity = 2

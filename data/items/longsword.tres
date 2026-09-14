@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="WeaponBase" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/items/weapon_base.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/weapons.png" id="2"]
+[ext_resource type="Resource" path="res://data/items/skills/lunge.tres" id="3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1"]
+atlas = ExtResource("2")
+region = Rect2(16, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"longsword"
+display_name = "Longsword"
+slot = 0
+icon = SubResource("AtlasTexture_1")
+implicit_flat = {
+&"armor": 10.0
+}
+implicit_percent = {}
+min_floor = 3
+tier = 1
+weight = 1.0
+proc_sprite_family = &""
+style = 0
+base_damage = 19.0
+attacks_per_second = 1.6
+range_px = 24.0
+knockback = 80.0
+tags = Array[StringName]([&"melee", &"physical"])
+projectile_speed = 220.0
+combo_length = 3
+skill = ExtResource("3")

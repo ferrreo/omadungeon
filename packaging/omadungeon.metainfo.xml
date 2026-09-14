@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.omadungeon.Omadungeon</id>
+  <name>Omadungeon</name>
+  <summary>Procedural rogue-like skinned by your Omarchy theme</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>BSD-3-Clause</project_license>
+  <description>
+    <p>
+      A fast, room-based rogue-like dungeon crawler. The palette, lighting and level
+      generation are derived from the Omarchy theme and wallpaper you are running, and
+      the dungeon retints live when you switch themes. Four classes, procedural loot,
+      two active and two passive ability slots, and enemies who all dislike your setup.
+    </p>
+  </description>
+  <launchable type="desktop-id">omadungeon.desktop</launchable>
+  <categories>
+    <category>Game</category>
+    <category>ActionGame</category>
+  </categories>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">mild</content_attribute>
+    <content_attribute id="language-profanity">mild</content_attribute>
+  </content_rating>
+</component>

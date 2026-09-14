@@ -1,0 +1,15 @@
+.godot/
+*.import.tmp
+tests/out/
+export/
+*.log
+.uv/
+__pycache__/
+reports/
+dist/
+debian/files
+debian/omadungeon/
+debian/omadungeon-lite/
+debian/.debhelper/
+debian/*.substvars
+debian/*.debhelper.log

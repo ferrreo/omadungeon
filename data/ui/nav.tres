@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UiNavProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/ui_nav_profile.gd" id="1_nav"]
+
+[resource]
+script = ExtResource("1_nav")
+press_threshold = 0.55
+release_threshold = 0.3
+repeat_delay = 0.4
+repeat_interval = 0.13
+capture_hold_seconds = 0.6
+notice_seconds = 2.5
+mouse_grace_seconds = 1.0

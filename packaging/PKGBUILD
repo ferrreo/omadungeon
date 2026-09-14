@@ -1,0 +1,31 @@
+# Maintainer: ferreo <ferreo@pika-os.com>
+pkgname=omadungeon
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Procedural rogue-like dungeon crawler skinned by your Omarchy theme"
+arch=('x86_64')
+url="https://github.com/ferrreo/omadungeon"
+license=('BSD-3-Clause')
+depends=('glibc' 'libx11' 'libxcursor' 'libxinerama' 'libxi' 'libxrandr' 'alsa-lib' 'pulseaudio' 'mesa' 'wayland' 'libxkbcommon')
+makedepends=('godot' 'git')
+source=("git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+build() {
+  cd "$srcdir/$pkgname"
+  mkdir -p export/linux
+  godot --headless --path . --import
+  godot --headless --path . --export-release "Linux x86_64" export/linux/omadungeon
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  install -Dm755 export/linux/omadungeon "$pkgdir/usr/lib/$pkgname/omadungeon"
+  install -dm755 "$pkgdir/usr/bin"
+  ln -s "/usr/lib/$pkgname/omadungeon" "$pkgdir/usr/bin/omadungeon"
+  install -Dm644 packaging/omadungeon.desktop "$pkgdir/usr/share/applications/omadungeon.desktop"
+  install -Dm644 packaging/omadungeon.metainfo.xml "$pkgdir/usr/share/metainfo/org.omadungeon.Omadungeon.metainfo.xml"
+  install -Dm644 packaging/icons/omadungeon-256.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/omadungeon.png"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 docs/CREDITS.md "$pkgdir/usr/share/doc/$pkgname/CREDITS.md"
+}

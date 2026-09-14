@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FractionAffix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/fraction_affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"damage_melee"
+stat = &"damage_melee"
+mode = 0
+min_value = 0.06
+max_value = 0.15
+prefix = "Brutal"
+suffix = "of Brawling"
+slots = Array[StringName]([&"weapon", &"ring"])
+weight = 0.9
+status_kind = 0
+min_rarity = 0
+weapon_tags = Array[StringName]([&"melee"])

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DifficultyCurve" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/balance/difficulty_curve.gd" id="1_curve"]
+
+[resource]
+script = ExtResource("1_curve")
+enemy_hp = Array[float]([1.0, 1.16, 1.28, 1.58, 1.82, 2.0, 2.4, 2.48, 2.7])
+enemy_damage = Array[float]([0.82, 1.02, 1.07, 1.53, 1.87, 1.95, 2.35, 2.46, 2.62])
+pack_budget = Array[float]([3.5, 4.4, 2.6, 5.6, 6.0, 4.7, 7.0, 7.2, 6.6])
+trap_damage = Array[float]([1.0, 1.05, 1.11, 1.17, 1.22, 1.28, 1.34, 1.4, 1.45])
+elite_hp_multiplier = 3.0
+elite_damage_multiplier = 1.0

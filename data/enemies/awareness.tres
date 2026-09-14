@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AwarenessProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/awareness_profile.gd" id="1_awareness"]
+
+[resource]
+script = ExtResource("1_awareness")
+sight_range = 160.0
+close_range = 28.0
+forget_slack = 1.25
+ally_wake_radius = 72.0
+ally_wake_delay = 0.3
+search_seconds = 3.5
+probe_interval = 0.15
+mark_seconds = 0.7
+return_speed_scale = 0.55
+home_tolerance = 6.0

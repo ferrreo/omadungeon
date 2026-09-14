@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="BalanceProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/balance/balance_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+weapon_uptime = 0.3
+ability_uptime = 0.8
+pack_alive_fraction = 0.55
+avoidance_base = 0.72
+avoidance_per_floor = 0.012
+boss_avoidance_bonus = 0.12
+ranged_avoidance_bonus = 0.06
+room_noise = 0.3
+potion_threshold = 0.45
+seconds_per_room = 7.0
+seconds_per_chest = 5.0
+boss_overhead_seconds = 12.0
+hazard_damage_share = 0.18
+trap_hits_base = 1.0
+trap_hits_per_floor = 0.22
+trap_room_fraction = 0.35
+trap_immune_share = 0.4
+prop_gold_per_room = 3.0
+power_offense_weight = 0.5
+pick_temperature = 0.06
+gold_power_per_coin = 0.0006
+reroll_below_score = 1.04
+enemy_spacing_px = 34.0
+max_ability_targets = 4.0
+single_target_count = 1.0
+tick_hit_share = 0.6
+sustain_horizon_seconds = 20.0
+adrenaline_uptime = 0.45
+tiling_uptime = 0.3
+low_hp_uptime = 0.25
+speed_to_avoidance = 0.12
+knockback_to_avoidance = 0.04
+bounce_dps_gain = 0.1
+extra_projectile_value = 0.45
+hotkey_kill_share = 0.6
+shadowstep_crit_bonus = 0.7
+utility_avoid_per_cast = 0.55
+cc_mitigation_share = 0.45
+execute_share = 0.3
+first_hit_share = 0.2
+kill_stack_uptime = 0.45
+room_fight_seconds = 14.0
+shop_base_price = 40
+shop_price_per_floor = 15
+buyout_base_price = 12
+buyout_price_per_floor = 2
+skip_gold_base = 10
+skip_gold_per_floor = 3

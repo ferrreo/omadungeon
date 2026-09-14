@@ -1,0 +1,11 @@
+# Build artefacts and editor caches have no business in the source tarball:
+# export/ alone is over 300 MB of exported Godot binaries, and .godot/ is a
+# regenerable import cache. These patterns add to dpkg-source's own defaults,
+# which already cover .git and friends.
+tar-ignore = export
+tar-ignore = dist
+tar-ignore = .godot
+tar-ignore = tests/out
+tar-ignore = reports
+tar-ignore = __pycache__
+tar-ignore = *.log

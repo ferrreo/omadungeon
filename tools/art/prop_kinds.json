@@ -1,0 +1,57 @@
+{
+  "crypt": [
+    "barrel",
+    "crate",
+    "sack",
+    "rubble",
+    "coffin",
+    "gravestone",
+    "urn",
+    "candle",
+    "bones"
+  ],
+  "forge": [
+    "barrel",
+    "crate",
+    "sack",
+    "rubble",
+    "anvil",
+    "cart",
+    "brazier",
+    "chain",
+    "slag"
+  ],
+  "frost": [
+    "barrel",
+    "crate",
+    "sack",
+    "rubble",
+    "ice_block",
+    "lantern",
+    "snowman",
+    "boulder",
+    "snow"
+  ],
+  "library": [
+    "barrel",
+    "crate",
+    "sack",
+    "rubble",
+    "bookshelf",
+    "desk",
+    "lectern",
+    "globe",
+    "books"
+  ],
+  "void": [
+    "barrel",
+    "crate",
+    "sack",
+    "rubble",
+    "crystal",
+    "monolith",
+    "floater",
+    "orb",
+    "rift"
+  ]
+}

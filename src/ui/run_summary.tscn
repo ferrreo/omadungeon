@@ -1,0 +1,145 @@
+[gd_scene load_steps=4 format=3 uid="uid://omadungeon_run_summary"]
+
+[ext_resource type="Script" path="res://src/ui/run_summary.gd" id="1"]
+[ext_resource type="Script" path="res://src/ui/scrolling_backdrop.gd" id="2"]
+[ext_resource type="Script" path="res://src/ui/ui_prompt.gd" id="3"]
+
+[node name="RunSummary" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Backdrop" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("2")
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -172.0
+offset_top = 0.0
+offset_right = 172.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Layout" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Headline" type="Label" parent="Panel/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Title"
+text = "YOU DIED"
+horizontal_alignment = 1
+
+[node name="Subline" type="Label" parent="Panel/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Dim"
+text = "Fighter in the Dungeon of Tokyo Night"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Sep" type="HSeparator" parent="Panel/Layout"]
+layout_mode = 2
+
+[node name="BodyWrap" type="Control" parent="Panel/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Body" type="ScrollContainer" parent="Panel/Layout/BodyWrap"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="Panel/Layout/BodyWrap/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Columns" type="HBoxContainer" parent="Panel/Layout/BodyWrap/Body/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Grid" type="GridContainer" parent="Panel/Layout/BodyWrap/Body/Content/Columns"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="ColSep" type="VSeparator" parent="Panel/Layout/BodyWrap/Body/Content/Columns"]
+layout_mode = 2
+
+[node name="Build" type="VBoxContainer" parent="Panel/Layout/BodyWrap/Body/Content/Columns"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="MorePlate" type="PanelContainer" parent="Panel/Layout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_type_variation = &"Hud"
+
+[node name="MoreHint" type="Container" parent="Panel/Layout/MorePlate"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("3")
+
+[node name="StatLine" type="Label" parent="Panel/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Dim"
+text = ""
+horizontal_alignment = 1
+
+[node name="Tracks" type="VBoxContainer" parent="Panel/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Retry" type="Button" parent="Panel/Layout/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reuse seed"
+
+[node name="NewRun" type="Button" parent="Panel/Layout/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New run"
+
+[node name="ToTitle" type="Button" parent="Panel/Layout/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Title"

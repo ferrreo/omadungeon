@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ClassDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/player/class_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"ranger"
+display_name = "Ranger"
+description = "Ranged, mobility, traps. Shortbow charged shots; dash drops caltrops."
+vitality = 4
+might = 2
+precision = 5
+arcana = 2
+swiftness = 5
+fortune = 2
+start_weapon_id = &"shortbow"
+innate_passive_id = &"sure_footed"
+class_active_id = &"volley"
+extra_ability_ids = Array[StringName]([])
+start_gold = 0
+dodge_style = 1
+sprite_sheet = "res://assets/sprites/player/ranger.png"
+portrait = "res://assets/sprites/player/ranger_portrait.png"

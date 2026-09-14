@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/greybeards/rant_priest.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/rant_priest.png" id="3_tex"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"rant_priest"
+display_name = "Rant Priest"
+faction = 1
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 16
+max_hp = 44.0
+damage = 9.0
+move_speed = 50.0
+armor = 0.0
+knockback_resistance = 0.0
+is_elite = false
+is_boss = false
+cost = 1.4
+min_floor = 0
+max_floor = 99
+gold_min = 4
+gold_max = 8
+weight = 0.8
+windup_time = 0.55
+attack_time = 0.25
+recover_time = 0.6
+attack_cooldown = 2.0
+attack_range = 40.0
+preferred_range = 30.0
+retreat_when_close = false
+ignores_pits = false
+body_radius = 5.0
+hurtbox_size = Vector2(10, 14)
+summon_defs = Array[ExtResource("1_def")]([])
+params = {
+"aura_interval": 3.0,
+"aura_radius": 48.0,
+"aura_magnitude": 0.25,
+"aura_duration": 3.5,
+"scream_radius": 40.0,
+"scream_knockback": 240.0
+}

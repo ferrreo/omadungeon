@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ClassDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/player/class_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"oligarch"
+display_name = "Oligarch"
+description = "Economy, luck, hirelings. Cane, 150 gold, a Contract; chests cost gold."
+vitality = 4
+might = 3
+precision = 3
+arcana = 2
+swiftness = 2
+fortune = 6
+start_weapon_id = &"golden_cane"
+innate_passive_id = &"buyout"
+class_active_id = &"contract"
+extra_ability_ids = Array[StringName]([])
+start_gold = 150
+dodge_style = 3
+sprite_sheet = "res://assets/sprites/player/oligarch.png"
+portrait = "res://assets/sprites/player/oligarch_portrait.png"

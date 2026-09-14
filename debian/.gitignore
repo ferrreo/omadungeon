@@ -1,0 +1,9 @@
+# debhelper build products
+/files
+/tmp
+/.debhelper/
+/debhelper-build-stamp
+/omadungeon/
+/omadungeon-lite/
+/*.substvars
+/*.debhelper.log

@@ -1,0 +1,124 @@
+[gd_resource type="Resource" script_class="RoomsContent" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/rooms/rooms_content.gd" id="1_content"]
+
+[resource]
+script = ExtResource("1_content")
+chest_weights = {
+1: {
+0: 45,
+1: 22,
+2: 15,
+3: 12,
+4: 3
+},
+2: {
+0: 30,
+1: 28,
+2: 30,
+3: 5,
+4: 5
+},
+3: {
+0: 35,
+1: 25,
+2: 15,
+3: 20,
+4: 3
+},
+4: {
+0: 20,
+1: 35,
+2: 10,
+3: 28,
+4: 5
+},
+9: {
+0: 15,
+1: 35,
+2: 40,
+3: 3,
+4: 5
+}
+}
+chest_cursed_per_floor = 1
+treasure_trap_chance = 0.5
+shrine_options = Array[Dictionary]([{
+"amount": 2,
+"buff": &"might",
+"cost": 10,
+"cost_kind": &"max_hp",
+"id": &"blood_might",
+"label": "Offer blood for Might"
+}, {
+"amount": 2,
+"buff": &"swiftness",
+"cost": 40,
+"cost_kind": &"gold",
+"id": &"gold_swiftness",
+"label": "Tithe gold for Swiftness"
+}, {
+"amount": 1,
+"buff": &"potion",
+"cost": 30,
+"cost_kind": &"gold",
+"id": &"refill_potion",
+"label": "Refill potion"
+}, {
+"amount": 1,
+"buff": &"cleanse",
+"cost": 25,
+"cost_kind": &"hp",
+"id": &"cleanse_curse",
+"label": "Cleanse a curse"
+}])
+prop_kinds = {
+&"crypt": Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"coffin", &"gravestone", &"urn", &"candle", &"bones"]),
+&"forge": Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"anvil", &"cart", &"brazier", &"chain", &"slag"]),
+&"frost": Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"ice_block", &"lantern", &"snowman", &"boulder", &"snow"]),
+&"library": Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"bookshelf", &"desk", &"lectern", &"globe", &"books"]),
+&"void": Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"crystal", &"monolith", &"floater", &"orb", &"rift"])
+}
+prop_sturdy_kinds = Array[StringName]([&"crate", &"coffin", &"anvil", &"ice_block", &"boulder", &"bookshelf", &"monolith"])
+prop_solid = {
+&"anvil": true,
+&"barrel": true,
+&"bones": false,
+&"books": false,
+&"bookshelf": true,
+&"boulder": true,
+&"brazier": true,
+&"candle": true,
+&"cart": true,
+&"chain": false,
+&"coffin": true,
+&"crate": true,
+&"crystal": true,
+&"desk": true,
+&"floater": true,
+&"globe": true,
+&"gravestone": true,
+&"ice_block": true,
+&"lantern": true,
+&"lectern": true,
+&"monolith": true,
+&"orb": true,
+&"rift": false,
+&"rubble": false,
+&"sack": true,
+&"slag": false,
+&"snow": false,
+&"snowman": true,
+&"urn": true
+}
+prop_gold_chance = 0.2
+prop_per_free_tile = 0.07
+prop_cluster_min = 2
+prop_cluster_max = 3
+prop_open_flat_share = 0.25
+prop_corner_weight = 3.0
+prop_contrast = Array[float]([1.0, 2.2, 2.2, 2.2, 2.2, 2.2, 2.6, 2.6])
+prop_accent_saturation = Array[float]([0.0, 0.26, 0.4, 0.4, 0.4, 0.36, 0.0, 0.0])
+shop_reroll_base_price = 25
+shop_reroll_growth = 1.5
+shop_rarity_price_mult = Array[float]([1.0, 1.4, 1.9, 2.6])

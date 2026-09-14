@@ -1,0 +1,88 @@
+[gd_resource type="Resource" script_class="UnlockTable" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://src/core/progression/unlock_table.gd" id="1_table"]
+[ext_resource type="Script" path="res://src/core/progression/unlock_def.gd" id="2_def"]
+
+[sub_resource type="Resource" id="UnlockDef_ranger"]
+script = ExtResource("2_def")
+id = &"ranger"
+title = "The Ranger"
+description = "Clear a floor."
+kind = 0
+counter = &"best_floor"
+threshold = 1
+order = 10
+
+[sub_resource type="Resource" id="UnlockDef_wizard"]
+script = ExtResource("2_def")
+id = &"wizard"
+title = "The Wizard"
+description = "Defeat 120 enemies."
+kind = 0
+counter = &"kills"
+threshold = 120
+order = 20
+
+[sub_resource type="Resource" id="UnlockDef_oligarch"]
+script = ExtResource("2_def")
+id = &"oligarch"
+title = "The Oligarch"
+description = "Clear three floors in one run."
+kind = 0
+counter = &"best_floor"
+threshold = 3
+order = 30
+
+[sub_resource type="Resource" id="UnlockDef_tiling_wm"]
+script = ExtResource("2_def")
+id = &"tiling_wm"
+title = "Tiling WM"
+description = "Clear a floor without taking a hit."
+kind = 1
+counter = &"flawless_floors"
+threshold = 1
+order = 40
+
+[sub_resource type="Resource" id="UnlockDef_whirlwind"]
+script = ExtResource("2_def")
+id = &"whirlwind"
+title = "Whirlwind"
+description = "Defeat 50 clowns."
+kind = 1
+counter = &"clowns_killed"
+threshold = 50
+order = 50
+
+[sub_resource type="Resource" id="UnlockDef_reboot"]
+script = ExtResource("2_def")
+id = &"reboot"
+title = "Reboot"
+description = "Defeat 50 greybeards."
+kind = 1
+counter = &"greybeards_killed"
+threshold = 50
+order = 60
+
+[sub_resource type="Resource" id="UnlockDef_rm_rf"]
+script = ExtResource("2_def")
+id = &"rm_rf"
+title = "rm -rf"
+description = "Defeat 50 tinkerers."
+kind = 1
+counter = &"tinkerers_killed"
+threshold = 50
+order = 70
+
+[sub_resource type="Resource" id="UnlockDef_lucky_coin"]
+script = ExtResource("2_def")
+id = &"lucky_coin"
+title = "Lucky Coin"
+description = "Earn 1000 gold across your runs."
+kind = 1
+counter = &"gold_earned"
+threshold = 1000
+order = 80
+
+[resource]
+script = ExtResource("1_table")
+entries = Array[ExtResource("2_def")]([SubResource("UnlockDef_ranger"), SubResource("UnlockDef_wizard"), SubResource("UnlockDef_oligarch"), SubResource("UnlockDef_tiling_wm"), SubResource("UnlockDef_whirlwind"), SubResource("UnlockDef_reboot"), SubResource("UnlockDef_rm_rf"), SubResource("UnlockDef_lucky_coin")])

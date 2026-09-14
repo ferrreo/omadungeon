@@ -1,0 +1,24 @@
+class-definitions-order:
+  - tools
+  - classnames
+  - extends
+  - signals
+  - enums
+  - consts
+  - staticvars
+  - exports
+  - pubvars
+  - prvvars
+  - onreadypubvars
+  - onreadyprvvars
+  - others
+disable:
+  - max-public-methods
+  - max-returns
+max-line-length: 110
+max-file-lines: 1200
+function-arguments-number: 12
+excluded_directories: !!set
+  .git: null
+  .godot: null
+  addons: null

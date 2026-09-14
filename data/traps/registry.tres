@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TrapRegistry" load_steps=13 format=3]
+
+[ext_resource type="Script" uid="uid://40iymcstuepy" path="res://src/traps/trap_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://data/traps/spike_floor.tres" id="2_spike_floor"]
+[ext_resource type="Resource" path="res://data/traps/arrow_wall.tres" id="3_arrow_wall"]
+[ext_resource type="Resource" path="res://data/traps/fire_vent.tres" id="4_fire_vent"]
+[ext_resource type="Resource" path="res://data/traps/pit.tres" id="5_pit"]
+[ext_resource type="Resource" path="res://data/traps/pressure_plate.tres" id="6_pressure_plate"]
+[ext_resource type="Resource" path="res://data/traps/ice_slide.tres" id="7_ice_slide"]
+[ext_resource type="Resource" path="res://data/traps/laser_grid.tres" id="8_laser_grid"]
+[ext_resource type="Resource" path="res://data/traps/mimic_chest.tres" id="9_mimic_chest"]
+[ext_resource type="Resource" path="res://data/traps/ricer_trap.tres" id="10_ricer_trap"]
+[ext_resource type="Resource" path="res://data/traps/kernel_spike.tres" id="11_kernel_spike"]
+[ext_resource type="Script" uid="uid://fumvxgiy7ri5" path="res://src/traps/trap_registry.gd" id="12_registry"]
+
+[resource]
+script = ExtResource("12_registry")
+defs = Array[ExtResource("1_def")]([ExtResource("2_spike_floor"), ExtResource("3_arrow_wall"), ExtResource("4_fire_vent"), ExtResource("5_pit"), ExtResource("6_pressure_plate"), ExtResource("7_ice_slide"), ExtResource("8_laser_grid"), ExtResource("9_mimic_chest"), ExtResource("10_ricer_trap"), ExtResource("11_kernel_spike")])

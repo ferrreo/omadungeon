@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="WeaponBase" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/items/weapon_base.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/weapons.png" id="2"]
+[ext_resource type="Resource" path="res://data/items/skills/barrier.tres" id="3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1"]
+atlas = ExtResource("2")
+region = Rect2(112, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"wand"
+display_name = "Wand"
+slot = 0
+icon = SubResource("AtlasTexture_1")
+implicit_flat = {}
+implicit_percent = {}
+min_floor = 0
+weight = 1.0
+proc_sprite_family = &""
+style = 3
+base_damage = 8.6
+attacks_per_second = 2.4
+range_px = 160.0
+knockback = 20.0
+tags = Array[StringName]([&"arcane", &"ability"])
+projectile_speed = 220.0
+combo_length = 1
+skill = ExtResource("3")

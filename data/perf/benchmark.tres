@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PerfBudget" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/perf/perf_budget.gd" id="1_budget"]
+
+[resource]
+script = ExtResource("1_budget")
+projectile_count = 200
+enemy_count = 40
+warmup_frames = 60
+measure_frames = 240
+target_fps = 60.0
+average_budget_ms = 16.67
+p95_budget_ms = 16.67
+worst_budget_ms = 50.0
+floor_cycles = 5
+node_leak_tolerance = 0
+boot_budget_seconds = 2.0

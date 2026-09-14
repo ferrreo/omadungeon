@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemTuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/item_tuning.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+weapon_tier_dps = PackedFloat32Array(20, 30, 45)
+weapon_tier_min_floor = PackedInt32Array(0, 3, 6)
+weapon_tier_tolerance = 0.25
+weapon_family_bias = 0.8
+weapon_home_bias = 0.5
+bow_charge_seconds = 0.75
+bow_tap_damage_mult = 0.65
+bow_full_damage_mult = 1.35
+bow_tap_speed_mult = 0.8
+bow_full_speed_mult = 1.25
+burn_dps_per_hit = 0.5
+burn_duration = 3.0
+poison_dps_per_hit = 0.35
+poison_duration = 4.0
+frost_duration = 2.5
+stun_duration = 0.35
+unarmed_hit_damage = 8.0

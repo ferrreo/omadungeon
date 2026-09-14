@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/passives/curse.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(432, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"curse_1"
+display_name = "Kernel Panic"
+description = "Everything falls over at the first fault: -30% maximum HP."
+kind = 1
+max_tier = 1
+class_only = &""
+weight = 0.0
+icon = SubResource("AtlasTexture_icon")
+percent_stats = Array[StringName]([&"max_hp"])
+percent_values = PackedFloat32Array(-0.3)
+flat_stats = Array[StringName]([])
+flat_values = PackedFloat32Array()

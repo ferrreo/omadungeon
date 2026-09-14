@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/passives/stat_passive.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(720, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"kernel_headers"
+display_name = "Kernel Headers"
+description = "Build from source: +1 to every primary stat."
+kind = 1
+max_tier = 3
+class_only = &""
+weight = 0.35
+percent_stats = Array[StringName]([])
+percent_values = PackedFloat32Array()
+flat_stats = Array[StringName]([&"vitality", &"might", &"precision", &"arcana", &"swiftness", &"fortune"])
+flat_values = PackedFloat32Array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+icon = SubResource("AtlasTexture_icon")

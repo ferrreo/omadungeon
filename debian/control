@@ -1,0 +1,121 @@
+# Omadungeon is built from a Godot 4.7 project. The export step needs the
+# "godot" editor binary (4.7 or newer) on PATH, or $GODOT_BIN pointing at it.
+# Godot 4 is not in the Debian archive, so it cannot be listed below without
+# making dpkg-checkbuilddeps unsatisfiable; see debian/README.source.
+Source: omadungeon
+Section: games
+Priority: optional
+Maintainer: ferreo <ferreo@pika-os.com>
+Build-Depends: debhelper-compat (= 13),
+               xz-utils
+Standards-Version: 4.6.2
+Homepage: https://github.com/ferrreo/omadungeon
+Rules-Requires-Root: no
+
+Package: omadungeon
+Architecture: amd64
+# Every library below is opened with dlopen() by the Godot runtime, so none of
+# them appear in the ELF NEEDED list and dpkg-shlibdeps cannot find them.
+# The list is derived from the exported binary by tools/check-deb-deps.sh;
+# re-run that script (it has a --check mode) whenever Godot is updated.
+Depends: ${misc:Depends},
+         libc6 (>= 2.28),
+         libasound2t64 | libasound2,
+         libegl1,
+         libgl1,
+         libgles2,
+         libudev1,
+         libwayland-client0,
+         libwayland-cursor0,
+         libwayland-egl1,
+         libx11-6,
+         libxcursor1,
+         libxext6,
+         libxi6,
+         libxinerama1,
+         libxkbcommon0,
+         libxrandr2,
+         libxrender1
+Recommends: libpulse0,
+            libdecor-0-0,
+            libdbus-1-3,
+            libfontconfig1,
+            libvulkan1
+Suggests: libspeechd2
+Conflicts: omadungeon-lite
+Replaces: omadungeon-lite
+Provides: omadungeon-lite (= ${binary:Version})
+Description: procedural rogue-like dungeon crawler skinned by your Omarchy theme
+ Omadungeon is a fast, room-based rogue-like whose palette, lighting and level
+ generation are derived from the Omarchy theme and wallpaper you are currently
+ running. Switch theme and the dungeon retints in front of you, and the next
+ floor generates differently. The enemies are the people who dislike your
+ setup: clowns, greybeards and tinkerers.
+ .
+ Runs are short and build-driven. Rooms lock until they are cleared, a chest
+ appears after every fight, and a character comes together from stats,
+ procedural loot and two active plus two passive ability slots. Four classes -
+ Fighter, Ranger, Wizard and Oligarch - each bring a starting weapon, an innate
+ passive, a unique dodge and a class ability. Nine floors span three biomes
+ with a boss every third floor, and quitting is safe: a run resumes where you
+ left the room. Keyboard and mouse and controller input are both first class.
+ .
+ Desktop integration is optional. The game reads the current Omarchy theme and
+ wallpaper, or an otter-shell configuration, when either is present, and falls
+ back to a built-in palette when neither is.
+ .
+ This package bundles the Omarchy Radio soundtrack, which the game also uses as
+ a level generation and lighting lever, and is therefore large. Install
+ omadungeon-lite instead for the same game without the bundled music.
+
+Package: omadungeon-lite
+Architecture: amd64
+Depends: ${misc:Depends},
+         libc6 (>= 2.28),
+         libasound2t64 | libasound2,
+         libegl1,
+         libgl1,
+         libgles2,
+         libudev1,
+         libwayland-client0,
+         libwayland-cursor0,
+         libwayland-egl1,
+         libx11-6,
+         libxcursor1,
+         libxext6,
+         libxi6,
+         libxinerama1,
+         libxkbcommon0,
+         libxrandr2,
+         libxrender1
+Recommends: libpulse0,
+            libdecor-0-0,
+            libdbus-1-3,
+            libfontconfig1,
+            libvulkan1
+Suggests: libspeechd2
+Conflicts: omadungeon
+Replaces: omadungeon
+Provides: omadungeon (= ${binary:Version})
+Description: rogue-like dungeon crawler skinned by your Omarchy theme (no music)
+ Omadungeon is a fast, room-based rogue-like whose palette, lighting and level
+ generation are derived from the Omarchy theme and wallpaper you are currently
+ running. Switch theme and the dungeon retints in front of you, and the next
+ floor generates differently. The enemies are the people who dislike your
+ setup: clowns, greybeards and tinkerers.
+ .
+ Runs are short and build-driven. Rooms lock until they are cleared, a chest
+ appears after every fight, and a character comes together from stats,
+ procedural loot and two active plus two passive ability slots. Four classes -
+ Fighter, Ranger, Wizard and Oligarch - each bring a starting weapon, an innate
+ passive, a unique dodge and a class ability. Nine floors span three biomes
+ with a boss every third floor, and quitting is safe: a run resumes where you
+ left the room. Keyboard and mouse and controller input are both first class.
+ .
+ This is the lite build: it is the same game as the omadungeon package with the
+ bundled Omarchy Radio soundtrack left out, which takes it from roughly 230 MB
+ installed to roughly 70 MB. Sound effects and the generated score are still
+ present, as is the built-in fallback score; only the Omarchy Radio playlist
+ is absent, so the credits screen lists no tracks and the music-derived
+ generation and lighting lever falls back to its neutral default. Install
+ omadungeon instead if you want the soundtrack.

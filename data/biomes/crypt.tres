@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Biome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/biome.gd" id="1_biome"]
+
+[resource]
+script = ExtResource("1_biome")
+id = &"crypt"
+display_name = "Crypt"
+floor_min = 0
+floor_max = 2
+trap_kinds = Array[StringName]([&"spike_floor", &"arrow_wall", &"pressure_plate", &"mimic_chest"])
+prop_kinds = Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"coffin", &"gravestone", &"urn", &"candle", &"bones"])
+palette_keys = PackedStringArray("brown", "green")
+tileset_path = "res://assets/tiles/crypt.png"
+fill_templates = Array[StringName]([])
+hazard_weight = 1.0
+lantern_spacing = 10

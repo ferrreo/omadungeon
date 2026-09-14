@@ -1,0 +1,28 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/actives/bulwark.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(128, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"bulwark"
+display_name = "Bulwark"
+description = "A 3 s shield absorbing 40% of your max HP. Absorbed hits reflect a melee pulse."
+kind = 0
+max_tier = 3
+class_only = &"fighter"
+weight = 1.5
+cooldown = 13.0
+damage = 10.0
+tags = Array[StringName]([&"ability", &"melee", &"physical"])
+icon = SubResource("AtlasTexture_icon")
+shield_fraction = 0.4
+shield_per_tier = 0.05
+duration = 3.0
+reflect_fraction = 0.5
+pulse_radius = 28.0
+pulse_knockback = 120.0

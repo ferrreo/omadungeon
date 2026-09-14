@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/clowns/clown_car.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/clown_car.png" id="3_tex"]
+[ext_resource type="Resource" path="res://data/enemies/juggler.tres" id="4_juggler"]
+[ext_resource type="Resource" path="res://data/enemies/honker.tres" id="5_honker"]
+[ext_resource type="Resource" path="res://data/enemies/balloon_clown.tres" id="6_balloon_clown"]
+[ext_resource type="Resource" path="res://data/enemies/mime.tres" id="7_mime"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"clown_car"
+display_name = "Clown Car"
+faction = 0
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 32
+max_hp = 60.0
+damage = 13.0
+move_speed = 50.0
+armor = 5.0
+knockback_resistance = 0.7
+is_elite = true
+is_boss = false
+cost = 4.0
+min_floor = 0
+max_floor = 99
+gold_min = 15
+gold_max = 25
+weight = 1.0
+windup_time = 0.7
+attack_time = 0.2
+recover_time = 0.9
+attack_cooldown = 2.0
+attack_range = 120.0
+preferred_range = 0.0
+retreat_when_close = false
+ignores_pits = false
+body_radius = 10.0
+hurtbox_size = Vector2(22, 22)
+summon_defs = Array[ExtResource("1_def")]([ExtResource("4_juggler"), ExtResource("5_honker"), ExtResource("6_balloon_clown"), ExtResource("7_mime")])
+params = {
+"summon_count": 4,
+"summon_interval": 15.0,
+"ram_speed": 200.0,
+"ram_distance": 160.0
+}

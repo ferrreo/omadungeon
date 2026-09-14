@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DungeonLight" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/rooms/dungeon_light.gd" id="1_light"]
+
+[resource]
+script = ExtResource("1_light")
+torch_energy = 0.94
+torch_texture_scale = 1.9
+torch_offset = Vector2(0, -3)
+torch_flicker = 0.14
+torch_flicker_hz = 2.3
+torch_max_lights = 96
+light_texture_size = 96
+light_value = 1.0
+light_saturation = 0.6
+torch_accent_mix = 0.35
+torch_accent_min_saturation = 0.15
+surround_depth_drop = 0.38
+surround_falloff_tiles = 7.0
+surround_grain = 0.09
+surround_grain_px = 4.0

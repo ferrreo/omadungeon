@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/greybeards/vim_zealot.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/vim_zealot.png" id="3_tex"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"vim_zealot"
+display_name = "Vim Zealot"
+faction = 1
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 16
+max_hp = 34.0
+damage = 10.0
+move_speed = 90.0
+armor = 0.0
+knockback_resistance = 0.0
+is_elite = false
+is_boss = false
+cost = 1.2
+min_floor = 0
+max_floor = 99
+gold_min = 3
+gold_max = 6
+weight = 1.0
+windup_time = 0.25
+attack_time = 0.2
+recover_time = 0.35
+attack_cooldown = 0.5
+attack_range = 18.0
+preferred_range = 0.0
+retreat_when_close = false
+ignores_pits = false
+body_radius = 5.0
+hurtbox_size = Vector2(10, 12)
+summon_defs = Array[ExtResource("1_def")]([])
+params = {
+"dash_length": 44.0,
+"dash_speed": 240.0,
+"walk_time": 0.85
+}

@@ -1,0 +1,85 @@
+Source format
+-------------
+
+debian/source/format is "3.0 (native)".
+
+Omadungeon has no separate upstream: the Debian packaging lives in the game's
+own git tree, is released in lockstep with it, and there is no upstream tarball
+to diff against. A "3.0 (quilt)" package would mean inventing an orig tarball
+that is byte-identical to the source and carrying an empty patch series, which
+buys nothing and only adds a step to every release.
+
+The one wart is that debian/changelog carries a Debian revision, 0.1.0-1, which
+dpkg-source warns about for a native package ("native package version may not
+have a revision"). The warning is not fatal and the revision is kept
+deliberately, so that a packaging-only fix can be released as 0.1.0-2 without
+retagging the game. If that warning ever needs to go away, drop the "-1" from
+debian/changelog; nothing else in this packaging parses it.
+
+debian/source/options excludes export/, dist/ and the .godot import cache from
+the generated tarball. Without that, the tarball would carry over 300 MB of
+exported binaries alongside the 160 MB of source audio it already has.
+
+
+Build requirements
+------------------
+
+Building requires the Godot editor binary, version 4.7 or newer, on PATH or in
+$GODOT_BIN. Godot 4 is not in the Debian archive, so it cannot appear in
+Build-Depends without making dpkg-checkbuilddeps permanently unsatisfiable; it
+is documented here and in the comment at the top of debian/control instead.
+
+The build exports two presets from export_presets.cfg:
+
+  "Linux x86_64"                   -> export/linux/omadungeon       (omadungeon)
+  "Linux x86_64 (lite, no music)"  -> export/linux-lite/omadungeon  (omadungeon-lite)
+
+Each is a complete copy of the Godot Linux export template with the game's PCK
+embedded in it as an ELF section, which is why the binary packages are large
+and why nothing in debian/rules may run strip over them.
+
+Both presets use export_filter="all_resources", which packs Godot resources and
+nothing else. Anything the game opens by path but that Godot does not import as
+a resource - data/themes/fallback/colors.toml, the radio playlist's .lrc lyrics
+- reaches the PCK only because include_filter names it, and both presets
+exclude addons/, so the gdUnit4 test framework is not shipped. Leaving a
+non-resource file out is invisible at export time: the export succeeds, the
+game starts, and it exits 0 having drawn the whole screen magenta because every
+colour role fell through to Color.MAGENTA. tools/deb.sh therefore refuses to
+build a package until it has (a) found every such file in the binary's own PCK
+directory and (b) run the game headless, in an empty HOME with no Omarchy and
+no otter-shell theme, with no engine error on stderr. Add a new file of that
+kind to include_filter in export_presets.cfg, and to required_pck_files() in
+tools/deb.sh if a glob there does not already cover it.
+
+
+Building without debhelper
+--------------------------
+
+    tools/deb.sh both
+
+builds both .deb files into dist/ using nothing but dpkg-deb. It generates
+DEBIAN/control from debian/control and debian/changelog, so the metadata has a
+single source regardless of which path built the package. debian/rules falls
+back to the same script when debhelper is not installed.
+
+
+Dependencies
+------------
+
+The Godot export template links against the C library and nothing else; X11,
+Wayland, EGL, GLES, ALSA and udev are all dlopen()ed at runtime. dpkg-shlibdeps
+therefore reports libc6 and stops, which is why dh_shlibdeps is overridden to
+do nothing and the Depends list is maintained by hand in debian/control.
+
+    tools/check-deb-deps.sh            derive and print the list
+    tools/check-deb-deps.sh --check    fail if debian/control has drifted
+
+--check compares Depends, Recommends and Suggests, as sets, against both binary
+stanzas: omadungeon and omadungeon-lite carry the same three lists and there is
+nothing generating one from the other, so checking only the first would let an
+edit to one of them through. Field order in debian/control is free; content is
+not.
+
+Re-run it after every Godot upgrade. It reports any SONAME it does not
+recognise, which is how a newly added engine dependency gets noticed.

@@ -1,0 +1,226 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Omadungeon
+Upstream-Contact: ferreo <ferreo@pika-os.com>
+Source: https://github.com/ferrreo/omadungeon
+Comment:
+ The binary packages ship a single self-contained Godot export with the game's
+ PCK embedded in the executable, so most files listed below are present inside
+ /usr/lib/omadungeon/omadungeon even though they are not visible as separate
+ paths on disk. The exceptions are the paths named in the export presets'
+ exclude_filter - addons/, tests/, tools/, docs/ and the build scripts - which
+ are part of the source but are not packed into either binary; the stanzas
+ below say so where it matters. The bundled Omarchy Radio tracks are the only
+ component that is not distributed under a free licence; see the
+ "Files: assets/music/radio/*" stanza and /usr/share/doc/omadungeon/CREDITS.md.
+Files-Excluded:
+ .godot/*
+ export/*
+
+Files: *
+Copyright: 2026 ferrreo
+License: BSD-3-Clause
+Comment:
+ Covers the game code (src/, tests/, tools/, data/), the procedurally
+ generated pixel art in assets/sprites/, assets/tiles/ and assets/music/
+ fallback loops, the sound effects in assets/sfx/ (generated in-house by
+ tools/gen-sfx.py), the packaging in packaging/ and this Debian packaging.
+ It does not cover addons/, which is third party; see the stanza below.
+
+Files: addons/gdUnit4/*
+Copyright: 2023 Mike Schulze
+License: MIT
+Comment:
+ gdUnit4 (https://github.com/MikeSchulze/gdUnit4), the unit-test framework the
+ suites in tests/ are written against. It is an editor plugin used only at
+ development time: "addons/*" is listed in the exclude_filter of both export
+ presets in export_presets.cfg, so no part of it is packed into the exported
+ binary and neither binary package distributes it. It is listed here because
+ it is present in the source tree. Upstream ships the licence text as
+ addons/gdUnit4/LICENSE; it is the same Expat licence quoted below.
+
+Files: debian/*
+Copyright: 2026 ferrreo
+License: BSD-3-Clause
+
+Files: assets/fonts/PressStart2P-Regular.ttf
+Copyright: 2012 The Press Start 2P Project Authors (cody@zone38.net),
+           with Reserved Font Name "Press Start 2P"
+License: OFL-1.1
+Comment: Full text shipped upstream as assets/fonts/OFL-pressstart2p.txt.
+
+Files: assets/fonts/Silkscreen-Regular.ttf
+Copyright: 2001 The Silkscreen Project Authors
+           (https://github.com/googlefonts/silkscreen), Jason Kottke,
+           with Reserved Font Name "Silkscreen"
+License: OFL-1.1
+Comment: Full text shipped upstream as assets/fonts/OFL-silkscreen.txt.
+
+Files: assets/fonts/VT323-Regular.ttf
+Copyright: 2011 The VT323 Project Authors (peter.hull@oikoi.com), Peter Hull,
+           with Reserved Font Name "VT323"
+License: OFL-1.1
+Comment: Full text shipped upstream as assets/fonts/OFL-vt323.txt.
+
+Files: assets/music/radio/*
+Copyright: The individual artists credited in docs/CREDITS.md
+License: Artist-permission
+Comment:
+ These are the artist-submitted Omarchy Radio tracks, bundled from
+ radio.omarchy.org (upstream repository omacom/radio.omarchy.org). Every track
+ and artist is listed in docs/CREDITS.md, installed as
+ /usr/share/doc/omadungeon/CREDITS.md and shown on the in-game credits screen.
+ Only the omadungeon binary package contains them; omadungeon-lite does not.
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ .
+ 3. Neither the name of the copyright holder nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+License: OFL-1.1
+ This Font Software is licensed under the SIL Open Font License, Version 1.1.
+ This license is copied below, and is also available with a FAQ at
+ https://openfontlicense.org
+ .
+ PREAMBLE
+ The goals of the Open Font License (OFL) are to stimulate worldwide
+ development of collaborative font projects, to support the font creation
+ efforts of academic and linguistic communities, and to provide a free and
+ open framework in which fonts may be shared and improved in partnership
+ with others.
+ .
+ The OFL allows the licensed fonts to be used, studied, modified and
+ redistributed freely as long as they are not sold by themselves. The
+ fonts, including any derivative works, can be bundled, embedded,
+ redistributed and/or sold with any software provided that any reserved
+ names are not used by derivative works. The fonts and derivatives,
+ however, cannot be released under any other type of license. The
+ requirement for fonts to remain under this license does not apply
+ to any document created using the fonts or their derivatives.
+ .
+ DEFINITIONS
+ "Font Software" refers to the set of files released by the Copyright
+ Holder(s) under this license and clearly marked as such. This may
+ include source files, build scripts and documentation.
+ .
+ "Reserved Font Name" refers to any names specified as such after the
+ copyright statement(s).
+ .
+ "Original Version" refers to the collection of Font Software components as
+ distributed by the Copyright Holder(s).
+ .
+ "Modified Version" refers to any derivative made by adding to, deleting,
+ or substituting -- in part or in whole -- any of the components of the
+ Original Version, by changing formats or by porting the Font Software to a
+ new environment.
+ .
+ "Author" refers to any designer, engineer, programmer, technical writer
+ or other person who contributed to the Font Software.
+ .
+ PERMISSION & CONDITIONS
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of the Font Software, to use, study, copy, merge, embed, modify,
+ redistribute, and sell modified and unmodified copies of the Font
+ Software, subject to the following conditions:
+ .
+ 1) Neither the Font Software nor any of its individual components,
+ in Original or Modified Versions, may be sold by itself.
+ .
+ 2) Original or Modified Versions of the Font Software may be bundled,
+ redistributed and/or sold with any software, provided that each copy
+ contains the above copyright notice and this license. These can be
+ included either as stand-alone text files, human-readable headers or
+ in the appropriate machine-readable metadata fields within text or
+ binary files as long as those fields can be easily viewed by the user.
+ .
+ 3) No Modified Version of the Font Software may use the Reserved Font
+ Name(s) unless explicit written permission is granted by the corresponding
+ Copyright Holder. This restriction only applies to the primary font name as
+ presented to the users.
+ .
+ 4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+ Software shall not be used to promote, endorse or advertise any
+ Modified Version, except to acknowledge the contribution(s) of the
+ Copyright Holder(s) and the Author(s) or with their explicit written
+ permission.
+ .
+ 5) The Font Software, modified or unmodified, in part or in whole,
+ must be distributed entirely under this license, and must not be
+ distributed under any other license. The requirement for fonts to
+ remain under this license does not apply to any document created
+ using the Font Software.
+ .
+ TERMINATION
+ This license becomes null and void if any of the above conditions are
+ not met.
+ .
+ DISCLAIMER
+ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+ COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+ OTHER DEALINGS IN THE FONT SOFTWARE.
+
+License: Artist-permission
+ No licence is stated. The Omarchy Radio upstream repository
+ (omacom/radio.omarchy.org) publishes these artist-submitted tracks without a
+ licence file and without a copyright assignment, so each track remains the
+ property of the individual artist who submitted it, and no free-software
+ licence can be claimed for them here.
+ .
+ They are bundled on the basis of the permission implied by submitting a track
+ to a public Omarchy community radio station for use within the Omarchy
+ universe. That is an implied permission, not a grant: it does not cover
+ relicensing, sale, or redistribution outside that context, and it is not
+ DFSG-free. A downstream distributor who is not comfortable with that should
+ ship the omadungeon-lite binary package, which contains no Omarchy Radio
+ audio at all, or rebuild omadungeon from the "Linux x86_64 (lite, no music)"
+ export preset.
+ .
+ If an artist objects, their track is removed: add the file name to the
+ EXCLUDE list at the top of tools/sync-radio.sh and the track is dropped from
+ the bundled playlist, from the download set and from docs/CREDITS.md on the
+ next sync.
