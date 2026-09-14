@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FractionAffix" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/items/fraction_affix.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"damage_poison"
+stat = &"damage_poison"
+mode = 0
+min_value = 0.08
+max_value = 0.2
+prefix = "Venomous"
+suffix = "of Blight"
+slots = Array[StringName]([&"weapon", &"ring", &"trinket"])
+weight = 0.7
+status_kind = 0
+min_rarity = 1

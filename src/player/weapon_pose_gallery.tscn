@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://omadungeon_weapon_pose_gallery"]
+
+[ext_resource type="Script" path="res://src/player/weapon_pose_gallery.gd" id="1"]
+
+[node name="WeaponPoseGallery" type="Node2D"]
+script = ExtResource("1")

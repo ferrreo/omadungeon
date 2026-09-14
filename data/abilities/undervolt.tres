@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/passives/stat_passive.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(752, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"undervolt"
+display_name = "Undervolt"
+description = "Runs cool: +22% move speed and +35% resistance to every element."
+kind = 1
+max_tier = 3
+class_only = &""
+weight = 1.0
+percent_stats = Array[StringName]([&"move_speed"])
+percent_values = PackedFloat32Array(0.22)
+flat_stats = Array[StringName]([&"resist_fire", &"resist_frost", &"resist_shock", &"resist_poison", &"resist_arcane"])
+flat_values = PackedFloat32Array(0.35, 0.35, 0.35, 0.35, 0.35)
+icon = SubResource("AtlasTexture_icon")

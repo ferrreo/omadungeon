@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="RoomTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/room_template.gd" id="1_tpl"]
+
+[resource]
+script = ExtResource("1_tpl")
+id = &"empty"
+pattern = &"empty"
+weight = 2.0
+min_size = Vector2i(5, 5)
+allowed_types = Array[int]([])
+biome_weights = {}
+allowed_biomes = Array[StringName]([])
+spacing = 3
+density = 0.5
+mask = ""

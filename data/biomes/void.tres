@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Biome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/biome.gd" id="1_biome"]
+
+[resource]
+script = ExtResource("1_biome")
+id = &"void"
+display_name = "Void"
+floor_min = 6
+floor_max = 8
+trap_kinds = Array[StringName]([&"pit", &"laser_grid", &"spike_floor", &"arrow_wall", &"pressure_plate", &"mimic_chest"])
+prop_kinds = Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"crystal", &"monolith", &"floater", &"orb", &"rift"])
+palette_keys = PackedStringArray("magenta", "cyan")
+tileset_path = "res://assets/tiles/void.png"
+fill_templates = Array[StringName]([])
+hazard_weight = 1.4
+lantern_spacing = 12

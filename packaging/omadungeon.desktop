@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Omadungeon
+GenericName=Rogue-like Dungeon Crawler
+Comment=Procedural rogue-like skinned by your Omarchy theme
+Exec=omadungeon
+Icon=omadungeon
+Terminal=false
+Categories=Game;ActionGame;RolePlaying;
+Keywords=roguelike;dungeon;pixel;omarchy;
+StartupWMClass=Omadungeon

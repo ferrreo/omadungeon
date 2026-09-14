@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/bosses/elder_greybeard.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/elder_greybeard.png" id="3_tex"]
+[ext_resource type="Resource" path="res://data/enemies/manpage_hurler.tres" id="4_hurler"]
+[ext_resource type="Resource" path="res://data/enemies/beard_warden.tres" id="5_warden"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"elder_greybeard"
+display_name = "The Elder Greybeard"
+faction = 1
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 32
+max_hp = 440.0
+damage = 43.0
+move_speed = 34.0
+armor = 6.0
+knockback_resistance = 0.85
+is_elite = false
+is_boss = true
+cost = 0.0
+min_floor = 6
+max_floor = 99
+gold_min = 150
+gold_max = 400
+weight = 0.0
+windup_time = 0.6
+attack_time = 0.35
+recover_time = 0.8
+attack_cooldown = 1.7
+attack_range = 220.0
+preferred_range = 72.0
+retreat_when_close = true
+ignores_pits = false
+body_radius = 10.0
+hurtbox_size = Vector2(22, 26)
+summon_defs = Array[ExtResource("1_def")]([ExtResource("4_hurler"), ExtResource("5_warden")])
+params = {
+"arena_radius": 104.0,
+"beam_damage_mult": 0.7,
+"beam_hit_interval": 0.6,
+"beam_knockback": 90.0,
+"beam_length": 180.0,
+"beam_speed": 0.5,
+"beam_speed_mult": 1.8,
+"beam_warmup": 0.8,
+"beam_width": 10.0,
+"spike_duration": 2.5,
+"spike_interval": 3.2,
+"spike_row_count": 7,
+"spike_row_spacing": 16.0,
+"spike_row_step": 0.7853981633974483,
+"summon_cap": 4,
+"summon_count": 2,
+"phase_damage_step": 0.35,
+"phase_speed_step": 0.25,
+"summon_interval": 8.0,
+"summon_radius": 34.0,
+"tentacle_damage_mult": 0.9,
+"tentacle_drift": 0.35,
+"tentacle_hit_time": 0.25,
+"tentacle_interval": 2.8,
+"tentacle_knockback": 160.0,
+"tentacle_reach": 56.0,
+"tentacle_step": 0.5235987755982988,
+"tentacle_width": 12.0,
+"tentacle_windup": 0.5,
+"volley_count": 3,
+"volley_damage_mult": 1.0,
+"volley_hit_time": 0.2,
+"volley_knockback": 140.0,
+"volley_radius": 18.0,
+"volley_spread": 44.0,
+"volley_telegraph": 0.6
+}

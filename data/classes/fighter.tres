@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ClassDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/player/class_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"fighter"
+display_name = "Fighter"
+description = "Melee, sustain, knockback. Rusty Sword combo; short roll with i-frames."
+vitality = 6
+might = 6
+precision = 2
+arcana = 1
+swiftness = 3
+fortune = 2
+start_weapon_id = &"rusty_sword"
+innate_passive_id = &"second_wind"
+class_active_id = &"bulwark"
+extra_ability_ids = Array[StringName]([])
+start_gold = 0
+dodge_style = 0
+sprite_sheet = "res://assets/sprites/player/fighter.png"
+portrait = "res://assets/sprites/player/fighter_portrait.png"

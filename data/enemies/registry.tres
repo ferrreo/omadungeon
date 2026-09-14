@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="EnemyRegistry" load_steps=20 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_registry.gd" id="1_reg"]
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="2_def"]
+[ext_resource type="Resource" path="res://data/enemies/juggler.tres" id="3_juggler"]
+[ext_resource type="Resource" path="res://data/enemies/honker.tres" id="4_honker"]
+[ext_resource type="Resource" path="res://data/enemies/balloon_clown.tres" id="5_balloon_clown"]
+[ext_resource type="Resource" path="res://data/enemies/mime.tres" id="6_mime"]
+[ext_resource type="Resource" path="res://data/enemies/clown_car.tres" id="7_clown_car"]
+[ext_resource type="Resource" path="res://data/enemies/manpage_hurler.tres" id="8_manpage_hurler"]
+[ext_resource type="Resource" path="res://data/enemies/beard_warden.tres" id="9_beard_warden"]
+[ext_resource type="Resource" path="res://data/enemies/rant_priest.tres" id="10_rant_priest"]
+[ext_resource type="Resource" path="res://data/enemies/vim_zealot.tres" id="11_vim_zealot"]
+[ext_resource type="Resource" path="res://data/enemies/kernel_panic.tres" id="12_kernel_panic"]
+[ext_resource type="Resource" path="res://data/enemies/ricer.tres" id="13_ricer"]
+[ext_resource type="Resource" path="res://data/enemies/distro_hopper.tres" id="14_distro_hopper"]
+[ext_resource type="Resource" path="res://data/enemies/config_gremlin.tres" id="15_config_gremlin"]
+[ext_resource type="Resource" path="res://data/enemies/dotfile_golem.tres" id="16_dotfile_golem"]
+[ext_resource type="Resource" path="res://data/enemies/ringmaster.tres" id="17_ringmaster"]
+[ext_resource type="Resource" path="res://data/enemies/the_suit.tres" id="18_the_suit"]
+[ext_resource type="Resource" path="res://data/enemies/elder_greybeard.tres" id="19_elder_greybeard"]
+
+[resource]
+script = ExtResource("1_reg")
+defs = Array[ExtResource("2_def")]([ExtResource("3_juggler"), ExtResource("4_honker"), ExtResource("5_balloon_clown"), ExtResource("6_mime"), ExtResource("7_clown_car"), ExtResource("8_manpage_hurler"), ExtResource("9_beard_warden"), ExtResource("10_rant_priest"), ExtResource("11_vim_zealot"), ExtResource("12_kernel_panic"), ExtResource("13_ricer"), ExtResource("14_distro_hopper"), ExtResource("15_config_gremlin"), ExtResource("16_dotfile_golem"), ExtResource("17_ringmaster"), ExtResource("18_the_suit"), ExtResource("19_elder_greybeard")])

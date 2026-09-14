@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PickupLimits" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/entities/pickups/pickup_limits.gd" id="1_limits"]
+
+[resource]
+script = ExtResource("1_limits")
+max_amount = {
+"gold": 5000,
+"heart": 200,
+"stat_orb": 1
+}
+bounds_margin_px = 64.0
+max_abs_position_px = 20000.0

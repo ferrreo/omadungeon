@@ -1,0 +1,26 @@
+#!/bin/sh
+# Omarchy theme-set hook for Omadungeon (docs/GAME_DESIGN.md 3.5, optional).
+#
+# Omarchy runs `omarchy-hook theme-set <name>` after every theme switch, executing every
+# file in ~/.config/omarchy/hooks/theme-set.d/. Install this one as
+#
+#   install -Dm755 tools/omarchy-hook/theme-set \
+#     ~/.config/omarchy/hooks/theme-set.d/50-omadungeon
+#
+# All it does is touch the file DesktopWatcher stats every 300 ms next to the Omarchy
+# symlinks (src/desktop/desktop_watcher.gd, HOOK_FILE). Without it the game still retints:
+# the watcher notices the symlink target change on its own tick. With it the change is seen
+# on the very next tick rather than whenever the filesystem gets round to the mtime, which is
+# the whole of the "zero latency" claim. It is never required, and the game runs fine if the
+# runtime dir is missing or read-only - hence the quiet exits rather than errors.
+#
+# Deliberately POSIX sh with no dependencies: this runs on someone else's desktop.
+set -eu
+
+runtime_dir="${XDG_RUNTIME_DIR:-}"
+[ -n "$runtime_dir" ] || exit 0
+
+hook_dir="$runtime_dir/omadungeon"
+mkdir -p "$hook_dir" 2>/dev/null || exit 0
+: >>"$hook_dir/theme-changed" 2>/dev/null || exit 0
+touch "$hook_dir/theme-changed" 2>/dev/null || exit 0

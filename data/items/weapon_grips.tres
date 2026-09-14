@@ -1,0 +1,135 @@
+[gd_resource type="Resource" script_class="WeaponGrips" format=3]
+
+[ext_resource type="Script" path="res://src/items/weapon_grip.gd" id="1_13fxl"]
+[ext_resource type="Script" path="res://src/items/weapon_grips.gd" id="2_jpjot"]
+
+[sub_resource type="Resource" id="Resource_6cdlf"]
+script = ExtResource("1_13fxl")
+grip = Vector2(5.5, 12.5)
+axis_degrees = -55.0
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_mpcsn"]
+script = ExtResource("1_13fxl")
+family = &"longsword"
+grip = Vector2(2.5, 13)
+axis_degrees = -51.0
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_ywgcq"]
+script = ExtResource("1_13fxl")
+family = &"greatsword"
+grip = Vector2(2.5, 13)
+axis_degrees = -51.0
+reach = 6.0
+sprite_scale = 0.95
+
+[sub_resource type="Resource" id="Resource_yaicd"]
+script = ExtResource("1_13fxl")
+family = &"axe"
+grip = Vector2(2.5, 13)
+axis_degrees = -51.0
+reach = 5.5
+sprite_scale = 0.9
+
+[sub_resource type="Resource" id="Resource_606av"]
+script = ExtResource("1_13fxl")
+family = &"spear"
+grip = Vector2(3.5, 13)
+axis_degrees = -45.0
+reach = 6.0
+lateral = 2.0
+sprite_scale = 0.95
+
+[sub_resource type="Resource" id="Resource_ctv7h"]
+script = ExtResource("1_13fxl")
+family = &"dagger"
+grip = Vector2(4, 11.5)
+axis_degrees = -49.0
+reach = 4.5
+sprite_scale = 0.8
+
+[sub_resource type="Resource" id="Resource_74pue"]
+script = ExtResource("1_13fxl")
+family = &"stiletto"
+grip = Vector2(4, 11.5)
+axis_degrees = -49.0
+reach = 4.5
+sprite_scale = 0.8
+
+[sub_resource type="Resource" id="Resource_yeqtw"]
+script = ExtResource("1_13fxl")
+family = &"shortbow"
+grip = Vector2(7.5, 8)
+reach = 6.0
+lateral = 1.5
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_t8ils"]
+script = ExtResource("1_13fxl")
+family = &"bow"
+grip = Vector2(7.5, 8)
+reach = 6.0
+lateral = 1.5
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_saxcg"]
+script = ExtResource("1_13fxl")
+family = &"crossbow"
+grip = Vector2(3, 10)
+reach = 5.5
+lateral = 1.5
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_66nqj"]
+script = ExtResource("1_13fxl")
+family = &"wand"
+grip = Vector2(3.5, 12.5)
+axis_degrees = -45.0
+reach = 4.5
+sprite_scale = 0.8
+
+[sub_resource type="Resource" id="Resource_4qd0e"]
+script = ExtResource("1_13fxl")
+family = &"staff"
+grip = Vector2(4, 13)
+axis_degrees = -52.0
+sprite_scale = 0.95
+
+[sub_resource type="Resource" id="Resource_uy035"]
+script = ExtResource("1_13fxl")
+family = &"knives"
+grip = Vector2(7, 14)
+axis_degrees = -90.0
+sprite_scale = 0.7
+
+[sub_resource type="Resource" id="Resource_yvd6w"]
+script = ExtResource("1_13fxl")
+family = &"knife"
+grip = Vector2(7, 14)
+axis_degrees = -90.0
+sprite_scale = 0.7
+
+[sub_resource type="Resource" id="Resource_gi5ip"]
+script = ExtResource("1_13fxl")
+family = &"cane"
+grip = Vector2(6.5, 13.5)
+axis_degrees = -61.0
+sprite_scale = 0.85
+
+[sub_resource type="Resource" id="Resource_vvv3q"]
+script = ExtResource("1_13fxl")
+family = &"fists"
+sprite_scale = 0.8
+
+[sub_resource type="Resource" id="Resource_rqrly"]
+script = ExtResource("1_13fxl")
+family = &""
+grip = Vector2(5.5, 12.5)
+axis_degrees = -55.0
+sprite_scale = 0.85
+
+[resource]
+script = ExtResource("2_jpjot")
+entries = Array[ExtResource("1_13fxl")]([SubResource("Resource_6cdlf"), SubResource("Resource_mpcsn"), SubResource("Resource_ywgcq"), SubResource("Resource_yaicd"), SubResource("Resource_606av"), SubResource("Resource_ctv7h"), SubResource("Resource_74pue"), SubResource("Resource_yeqtw"), SubResource("Resource_t8ils"), SubResource("Resource_saxcg"), SubResource("Resource_66nqj"), SubResource("Resource_4qd0e"), SubResource("Resource_uy035"), SubResource("Resource_yvd6w"), SubResource("Resource_gi5ip"), SubResource("Resource_vvv3q")])
+fallback = SubResource("Resource_rqrly")

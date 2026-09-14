@@ -1,0 +1,1003 @@
+{
+  "_comment": [
+    "The register of every check this repository owns, and of every file under tools/ that is",
+    "not one. It exists because the release gate went green for five rounds over a check that",
+    "was failing: tests/unit/rooms/prop_frame_capture exits 2 on the default theme and nothing",
+    "in the repository ever ran it. A check nobody runs is worse than no check, because it",
+    "reads as coverage.",
+    "",
+    "This file says what a check IS. It never says how a check WENT: that is the results",
+    "ledger, reports/checks/<id>.json, written by tools/run-checks.sh out of the exit code the",
+    "process actually returned. The register used to carry a known_failing string somebody",
+    "typed, and the gate's colour was a function of that field - which is the same disease one",
+    "level up: a claim standing in for a result. It is gone; nothing here can make a check look",
+    "green or red.",
+    "",
+    "Three things read this file:",
+    "  tools/run-checks.sh          runs a tier of it, records what happened, and is what CI calls",
+    "  tools/checks.py              parses it, and reads and writes the ledger",
+    "  tests/unit/tools/check_registry_test.gd   is in the gate and fails when",
+    "    - a file under tools/ or a capture scene under tests/ is not declared here,",
+    "    - a declared check names a command that does not exist,",
+    "    - a check with \"runs\": \"ci\" is not referenced by .github/workflows/ci.yml,",
+    "    - a check with \"runs\": \"manual\" has no \"why_manual\" saying what runs it instead,",
+    "    - a check declares a status of its own instead of leaving that to the ledger,",
+    "    - or a check outside tier 1 has no recent passing record in the ledger.",
+    "",
+    "That last rule is the point of the whole file now. The gate is tier 1, and tier 1 is one",
+    "invocation of the 48 this register holds; the other 47 are captures, soaks and packaging",
+    "steps that a green gate used to say nothing at all about. It says something about them",
+    "now, and the only way to make it say so is to run them."
+  ],
+  "schema": {
+    "id": "unique name, also the argument to tools/run-checks.sh",
+    "title": "what the check answers",
+    "tier": "cheap | unit | rendered | soak | package | vm",
+    "command": "argv prefix, relative to the project root",
+    "matrix": "list of argv suffixes; the command runs once per row (default: one empty row)",
+    "env": "environment the check needs",
+    "runs": "ci (referenced by .github/workflows/ci.yml) | manual (needs why_manual)",
+    "asserts": "true when the check fails on its own; false when it only produces pictures for a human",
+    "outputs": "files under tests/out/ the check must leave behind, %s replaced by the theme suffix",
+    "subjects": "for the scenarios check: TestScenarios.SUBJECTS, pinned so neither list can shrink quietly",
+    "screens": "for the gallery check: UiGallery.SCREENS, pinned the same way"
+  },
+  "policy": {
+    "_comment": [
+      "Where results are recorded and how old one may be before the gate stops believing it.",
+      "Both are bounded by constants in tests/unit/tools/check_registry_test.gd, so widening the",
+      "window here does not widen it in the gate: a max age over the ceiling fails the suite."
+    ],
+    "results_dir": "reports/checks",
+    "result_max_age_hours": 48
+  },
+  "checks": [
+    {
+      "id": "compile",
+      "title": "every .gd under src/, tests/ and tools/ re-parses",
+      "tier": "cheap",
+      "command": [
+        "tools/check-scripts.sh"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "lint",
+      "title": "gdformat --check and gdlint over src/, tests/ and tools/",
+      "tier": "cheap",
+      "command": [
+        "tools/lint.sh"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "quit-time",
+      "title": "the game exits within 5 s of asking to, headless: a floor with music and lights, then quit(0)",
+      "tier": "cheap",
+      "command": [
+        "tools/check-quit.sh",
+        "headless"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "quit-time-rendered",
+      "title": "the same exit budget under the real GL driver in nested sway, where the shutdown hang was seen",
+      "tier": "rendered",
+      "command": [
+        "tools/check-quit.sh",
+        "rendered"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "quit-close",
+      "title": "the window manager's close request, answered from a built floor: headless, within the same 5 s",
+      "tier": "cheap",
+      "command": [
+        "tools/check-quit.sh",
+        "close-headless"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "quit-close-rendered",
+      "title": "the same with a real request: sway told to close the window over a live floor, as a title-bar X does",
+      "tier": "rendered",
+      "command": [
+        "tools/check-quit.sh",
+        "close"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "exit-verdict",
+      "title": "a run the quit watchdog kills reports the code it asked for, so a hang cannot launder a failing check",
+      "tier": "rendered",
+      "command": [
+        "tools/check-exit-verdict.sh"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "gate",
+      "title": "the gdUnit4 unit and integration suites",
+      "tier": "unit",
+      "command": [
+        "tools/test.sh",
+        "-c"
+      ],
+      "env": {
+        "OMADUNGEON_TEST_COPY": "1"
+      },
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "scenarios",
+      "title": "every scenario in TestScenarios.SUBJECTS, in a dark theme and a light one",
+      "tier": "rendered",
+      "command": [
+        "tools/run-scenario.sh"
+      ],
+      "matrix": [
+        [
+          "boot",
+          "tokyo-night"
+        ],
+        [
+          "boot",
+          "white"
+        ],
+        [
+          "class_select",
+          "tokyo-night"
+        ],
+        [
+          "class_select",
+          "white"
+        ],
+        [
+          "floor",
+          "tokyo-night"
+        ],
+        [
+          "floor",
+          "white"
+        ],
+        [
+          "combat",
+          "tokyo-night"
+        ],
+        [
+          "combat",
+          "white"
+        ],
+        [
+          "chest",
+          "tokyo-night"
+        ],
+        [
+          "chest",
+          "white"
+        ],
+        [
+          "loot_drop",
+          "tokyo-night"
+        ],
+        [
+          "loot_drop",
+          "white"
+        ],
+        [
+          "pause",
+          "tokyo-night"
+        ],
+        [
+          "pause",
+          "white"
+        ],
+        [
+          "summary",
+          "tokyo-night"
+        ],
+        [
+          "summary",
+          "white"
+        ],
+        [
+          "new_run_confirm",
+          "tokyo-night"
+        ],
+        [
+          "new_run_confirm",
+          "white"
+        ],
+        [
+          "theme_swap"
+        ],
+        [
+          "theme_swap_midfight"
+        ],
+        [
+          "music_moods",
+          "tokyo-night"
+        ],
+        [
+          "music_moods",
+          "catppuccin-latte"
+        ],
+        [
+          "music_change",
+          "tokyo-night"
+        ],
+        [
+          "music_change",
+          "catppuccin-latte"
+        ],
+        [
+          "music_within",
+          "tokyo-night"
+        ],
+        [
+          "music_within",
+          "catppuccin-latte"
+        ],
+        [
+          "quit",
+          "tokyo-night"
+        ],
+        [
+          "quit",
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true,
+      "subjects": [
+        "boot",
+        "class_select",
+        "floor",
+        "combat",
+        "chest",
+        "loot_drop",
+        "pause",
+        "theme_swap",
+        "theme_swap_midfight",
+        "summary",
+        "new_run_confirm",
+        "music_moods",
+        "music_change",
+        "music_within",
+        "quit"
+      ]
+    },
+    {
+      "id": "ui-gallery",
+      "title": "all 37 UI screens with fake data, dark and light",
+      "tier": "rendered",
+      "command": [
+        "tools/ui-gallery.sh"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true,
+      "screens": [
+        "title",
+        "class_select",
+        "hud",
+        "chest_item",
+        "chest_stat",
+        "chest_ability",
+        "chest_replace",
+        "chest_replace_item",
+        "chest_four",
+        "chest_shop",
+        "hud_tag",
+        "hud_tooltip",
+        "loadout",
+        "pause_build",
+        "pause_controls",
+        "pause_settings",
+        "settings",
+        "settings_bindings",
+        "settings_capture",
+        "settings_advanced",
+        "run_summary",
+        "run_summary_full",
+        "run_death",
+        "credits",
+        "stats",
+        "accessibility",
+        "enemy_bars",
+        "hud_glyphs",
+        "chest_item_glyphs",
+        "pause_build_glyphs",
+        "pause_controls_pad",
+        "settings_bindings_pad",
+        "pause_settings_pad",
+        "settings_capture_pad",
+        "settings_audio_pad",
+        "chest_item_pad",
+        "chest_item_start"
+      ]
+    },
+    {
+      "id": "prop-frame",
+      "title": "prop readability measured on a drawn frame: 5 biomes x 9 kinds, every fixture",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "prop_frame"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "catppuccin"
+        ],
+        [
+          "gruvbox"
+        ],
+        [
+          "nord"
+        ],
+        [
+          "catppuccin-latte"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true,
+      "outputs": [
+        "prop_frame_crypt%s.png",
+        "prop_frame_forge%s.png",
+        "prop_frame_frost%s.png",
+        "prop_frame_library%s.png",
+        "prop_frame_void%s.png"
+      ]
+    },
+    {
+      "id": "pickup-frame",
+      "title": "every pickup kind measured on a drawn frame against the surface under it",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "pickup_frame"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "catppuccin"
+        ],
+        [
+          "gruvbox"
+        ],
+        [
+          "nord"
+        ],
+        [
+          "catppuccin-latte"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true,
+      "outputs": [
+        "pickup_frame%s.png"
+      ]
+    },
+    {
+      "id": "lighting-frame",
+      "title": "the lighting layer on a drawn frame: ms per frame at off/low/high on llvmpipe, the floor around the player above the legibility line, a lantern pool that lifts the floor it falls on",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "lighting_frame"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "gruvbox"
+        ],
+        [
+          "catppuccin-latte"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true,
+      "outputs": [
+        "lighting_off%s.png",
+        "lighting_low%s.png",
+        "lighting_high%s.png",
+        "lighting_perf%s.txt"
+      ]
+    },
+    {
+      "id": "feel-tell",
+      "title": "pictures only, for a human to look at: the danger tell and the trap arming overlay at 1:1. Asserts nothing itself (\"asserts\": false) - the tell's own guarantees are held by tests/unit/feel/danger_tell_test.gd and game_feel_test.gd",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "feel_tell"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": false,
+      "outputs": [
+        "feel_tell%s.png"
+      ]
+    },
+    {
+      "id": "ui-stats",
+      "title": "pictures only, for a human to look at: the statistics table against a fresh, a one-run and a long-history profile. Asserts nothing itself (\"asserts\": false) - the table's own guarantees are held by tests/unit/ui/stats_screen_test.gd and viewport_fit_test.gd",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "ui_stats"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": false,
+      "outputs": [
+        "ui_stats_fresh%s.png",
+        "ui_stats_one_run%s.png",
+        "ui_stats_history%s.png"
+      ]
+    },
+    {
+      "id": "ui-trade",
+      "title": "pictures only, for a human to look at: the two trade-view pages the gallery cannot reach. Asserts nothing itself (\"asserts\": false) - the pages' own guarantees, the \"+N more\" tail and the truncated-label check included, are held by tests/unit/ui/chest_ui_test.gd and trade_view_test.gd",
+      "tier": "rendered",
+      "command": [
+        "tools/capture-scene.sh",
+        "ui_trade"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ],
+        [
+          "white"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": false,
+      "outputs": [
+        "ui_trade_page1%s.png",
+        "ui_trade_page2%s.png",
+        "ui_trade_price%s.png"
+      ]
+    },
+    {
+      "id": "weapon-poses",
+      "title": "every weapon family and facing, one sheet per beat of an attack",
+      "tier": "rendered",
+      "command": [
+        "tools/art/weapon-poses.sh"
+      ],
+      "matrix": [
+        [
+          "tokyo-night"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "colourblind",
+      "title": "protan/deutan/tritan/achromatic simulations of the captured HUD",
+      "tier": "rendered",
+      "command": [
+        "tools/colourblind_check.py",
+        "tests/out/ui_hud.png",
+        "tests/out/ui_hud_glyphs.png"
+      ],
+      "matrix": [
+        [
+          "--out",
+          "tests/out/colourblind"
+        ]
+      ],
+      "runs": "manual",
+      "asserts": false,
+      "why_manual": [
+        "With no --swatch coordinates it renders simulations and always exits 0, so wiring it",
+        "into CI would add a step that cannot fail - the exact shape this register exists to",
+        "stop. The claim it is meant to defend (colour is never the only channel) is asserted",
+        "in the gate by tests/unit/ui/accessibility_test.gd and tests/unit/ui/status_legibility_test.gd,",
+        "and photographed by the gallery's three *_glyphs screens - all of which do run. Give it",
+        "--swatch pairs and it can be",
+        "promoted to runs: ci."
+      ]
+    },
+    {
+      "id": "death-soak",
+      "title": "the death, drop and teardown path over many processes; minima per process and over the fleet",
+      "tier": "soak",
+      "command": [
+        "tools/soak.sh"
+      ],
+      "matrix": [
+        [
+          "--processes",
+          "3",
+          "--runs",
+          "2",
+          "--floors",
+          "4"
+        ]
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "packages",
+      "title": "both .deb variants build, and their Depends still match the exported binary",
+      "tier": "package",
+      "command": [
+        "tools/deb.sh",
+        "both"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "deb-deps",
+      "title": "derived Depends vs. debian/control",
+      "tier": "package",
+      "command": [
+        "tools/check-deb-deps.sh",
+        "--check"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "package-layout",
+      "title": "the unpacked .deb holds every installed path, and starts clean with an empty HOME",
+      "tier": "package",
+      "command": [
+        "tools/check-package-layout.sh"
+      ],
+      "runs": "ci",
+      "asserts": true
+    },
+    {
+      "id": "appimage",
+      "title": "the AppImage variant builds",
+      "tier": "package",
+      "command": [
+        "tools/appimage.sh"
+      ],
+      "runs": "manual",
+      "asserts": true,
+      "why_manual": [
+        "It downloads appimagetool from the network at build time into ~/.cache, which makes",
+        "the step fail for a reason that is not this project. The .deb is the artefact the",
+        "shipped package is, and it is what CI builds and unpacks; the AppImage shares the",
+        "same tools/export.sh output, so a broken export fails the packages job first.",
+        "Run it by hand before an AppImage release."
+      ]
+    },
+    {
+      "id": "omarchy-vm",
+      "title": "tier 3: the packaged .deb on a genuine Omarchy desktop, and the live retint proof",
+      "tier": "vm",
+      "command": [
+        "tools/vm/verify.sh"
+      ],
+      "runs": "manual",
+      "asserts": true,
+      "why_manual": [
+        "It needs /dev/kvm, ~6 GB of Omarchy ISO and about ten minutes of unattended install.",
+        "No hosted runner offers nested virtualisation, so this cannot be a CI job; it is run",
+        "by hand on a machine with KVM before a release (docs/TESTING.md tier 3), and its",
+        "output is tests/out/vm/verify.txt plus one PNG per theme switch."
+      ]
+    }
+  ],
+  "inventory": [
+    {
+      "path": "tools/checks.json",
+      "kind": "register"
+    },
+    {
+      "path": "tools/run-checks.sh",
+      "kind": "harness"
+    },
+    {
+      "path": "tools/checks.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/capture-scene.sh",
+      "kind": "harness"
+    },
+    {
+      "path": "tools/test.sh",
+      "kind": "harness",
+      "check": "gate"
+    },
+    {
+      "path": "tools/check-scripts.sh",
+      "kind": "harness",
+      "check": "compile"
+    },
+    {
+      "path": "tools/check_scripts.gd",
+      "kind": "harness",
+      "check": "compile"
+    },
+    {
+      "path": "tools/check_scripts.gd.uid",
+      "kind": "godot-metadata"
+    },
+    {
+      "path": "tools/lint.sh",
+      "kind": "harness",
+      "check": "lint"
+    },
+    {
+      "path": "tools/check-quit.sh",
+      "kind": "harness",
+      "check": "quit-time"
+    },
+    {
+      "path": "tools/check-exit-verdict.sh",
+      "kind": "harness",
+      "check": "exit-verdict"
+    },
+    {
+      "path": "tools/format.sh",
+      "kind": "fixer"
+    },
+    {
+      "path": "tools/run-scenario.sh",
+      "kind": "harness",
+      "check": "scenarios"
+    },
+    {
+      "path": "tools/ui-gallery.sh",
+      "kind": "harness",
+      "check": "ui-gallery"
+    },
+    {
+      "path": "tools/headless-sway.sh",
+      "kind": "harness"
+    },
+    {
+      "path": "tools/godot-import.sh",
+      "kind": "harness"
+    },
+    {
+      "path": "tools/sandbox-lib.sh",
+      "kind": "library"
+    },
+    {
+      "path": "tools/sway-headless.conf",
+      "kind": "config"
+    },
+    {
+      "path": "tools/soak.sh",
+      "kind": "harness",
+      "check": "death-soak"
+    },
+    {
+      "path": "tools/colourblind_check.py",
+      "kind": "harness",
+      "check": "colourblind"
+    },
+    {
+      "path": "tools/deb.sh",
+      "kind": "packaging",
+      "check": "packages"
+    },
+    {
+      "path": "tools/check-deb-deps.sh",
+      "kind": "packaging",
+      "check": "deb-deps"
+    },
+    {
+      "path": "tools/check-package-layout.sh",
+      "kind": "packaging",
+      "check": "package-layout"
+    },
+    {
+      "path": "tools/appimage.sh",
+      "kind": "packaging",
+      "check": "appimage"
+    },
+    {
+      "path": "tools/export.sh",
+      "kind": "packaging"
+    },
+    {
+      "path": "tools/analyze-radio.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/gen-music.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/gen-sfx.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/sync-radio.sh",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/omarchy-hook/theme-set",
+      "kind": "shipped-script"
+    },
+    {
+      "path": "tools/art/weapon-poses.sh",
+      "kind": "harness",
+      "check": "weapon-poses"
+    },
+    {
+      "path": "tools/art/README.md",
+      "kind": "doc"
+    },
+    {
+      "path": "tools/art/characters.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/contact_sheet.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/art/enemies.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/fetch_fonts.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/art/gen_all.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/art/grammar_sheet.py",
+      "kind": "generator"
+    },
+    {
+      "path": "tools/art/item_cells.json",
+      "kind": "data"
+    },
+    {
+      "path": "tools/art/items.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/prop_kinds.json",
+      "kind": "data"
+    },
+    {
+      "path": "tools/art/prop_solid.json",
+      "kind": "data"
+    },
+    {
+      "path": "tools/art/prop_maps.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/props.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/tiles.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/toolkit.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/art/ui.py",
+      "kind": "library"
+    },
+    {
+      "path": "tools/vm/README.md",
+      "kind": "doc"
+    },
+    {
+      "path": "tools/vm/boot.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/cidata.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/common.sh",
+      "kind": "library",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/console-shot.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/create.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/fetch-iso.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/game.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/install-game.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/provision.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/run.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/shot.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/ssh.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/stop.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/theme.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/verify.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/wait-ssh.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    },
+    {
+      "path": "tools/vm/fullscreen.sh",
+      "kind": "harness",
+      "check": "omarchy-vm"
+    }
+  ],
+  "capture_scenes": [
+    {
+      "path": "res://tests/unit/rooms/prop_frame_capture.tscn",
+      "id": "prop_frame",
+      "check": "prop-frame"
+    },
+    {
+      "path": "res://tests/unit/rooms/pickup_frame_capture.tscn",
+      "id": "pickup_frame",
+      "check": "pickup-frame"
+    },
+    {
+      "path": "res://tests/unit/rooms/lighting_frame_capture.tscn",
+      "id": "lighting_frame",
+      "check": "lighting-frame"
+    },
+    {
+      "path": "res://tests/unit/feel/tell_capture.tscn",
+      "id": "feel_tell",
+      "check": "feel-tell"
+    },
+    {
+      "path": "res://tests/unit/ui/stats_capture.tscn",
+      "id": "ui_stats",
+      "check": "ui-stats"
+    },
+    {
+      "path": "res://tests/unit/ui/trade_pages_capture.tscn",
+      "id": "ui_trade",
+      "check": "ui-trade"
+    },
+    {
+      "path": "res://tests/unit/tools/death_soak.tscn",
+      "id": "death_soak",
+      "check": "death-soak"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TrapDef" load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://40iymcstuepy" path="res://src/traps/trap_def.gd" id="1_def"]
+[ext_resource type="PackedScene" uid="uid://mqcabvyoiob4" path="res://src/traps/fire_vent.tscn" id="2_scene"]
+[ext_resource type="Script" uid="uid://blx3qqlxnqs12" path="res://src/traps/fire_vent.gd" id="3_script"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"fire_vent"
+display_name = "Fire Vent"
+scene = ExtResource("2_scene")
+script_class = ExtResource("3_script")
+biomes = Array[StringName]([&"forge"])
+is_hazard = false
+damage = 4.0
+knockback = 10.0
+telegraph_time = 0.5
+active_time = 2.0
+cooldown_time = 3.0
+duration = 0.0
+enemies_immune = false
+weight = 2.5

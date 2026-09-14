@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RoomTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/room_template.gd" id="1_tpl"]
+
+[resource]
+script = ExtResource("1_tpl")
+id = &"cross"
+pattern = &"cross"
+weight = 1.0
+min_size = Vector2i(11, 9)
+allowed_types = Array[int]([1, 2, 8])
+biome_weights = {
+&"crypt": 0.8,
+&"forge": 1.4,
+&"frost": 0.9,
+&"library": 1.3,
+&"void": 1.0,
+}
+allowed_biomes = Array[StringName]([])
+spacing = 2
+density = 0.5
+mask = ""

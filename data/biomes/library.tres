@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Biome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/biome.gd" id="1_biome"]
+
+[resource]
+script = ExtResource("1_biome")
+id = &"library"
+display_name = "Library"
+floor_min = 3
+floor_max = 5
+trap_kinds = Array[StringName]([&"arrow_wall", &"pressure_plate", &"spike_floor", &"mimic_chest"])
+prop_kinds = Array[StringName]([&"barrel", &"crate", &"sack", &"rubble", &"bookshelf", &"desk", &"lectern", &"globe", &"books"])
+palette_keys = PackedStringArray("brown", "yellow")
+tileset_path = "res://assets/tiles/library.png"
+fill_templates = Array[StringName]([&"empty", &"pillars", &"cross", &"ring", &"rubble"])
+hazard_weight = 0.8
+lantern_spacing = 9

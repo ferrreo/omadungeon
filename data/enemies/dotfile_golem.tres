@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/tinkerers/dotfile_golem.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/dotfile_golem.png" id="3_tex"]
+[ext_resource type="Resource" path="res://data/enemies/config_gremlin.tres" id="4_config_gremlin"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"dotfile_golem"
+display_name = "Dotfile Golem"
+faction = 2
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 32
+max_hp = 70.0
+damage = 14.0
+move_speed = 30.0
+armor = 10.0
+knockback_resistance = 0.8
+is_elite = true
+is_boss = false
+cost = 4.0
+min_floor = 0
+max_floor = 99
+gold_min = 15
+gold_max = 25
+weight = 1.0
+windup_time = 0.7
+attack_time = 0.3
+recover_time = 1.0
+attack_cooldown = 1.5
+attack_range = 26.0
+preferred_range = 0.0
+retreat_when_close = false
+ignores_pits = false
+body_radius = 10.0
+hurtbox_size = Vector2(22, 24)
+summon_defs = Array[ExtResource("1_def")]([ExtResource("4_config_gremlin")])
+params = {
+"slam_radius": 30.0,
+"split_count": 3
+}

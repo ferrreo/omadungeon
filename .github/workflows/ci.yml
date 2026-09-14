@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Three jobs, in this order, and the order is the point.
+#
+#   checks  runs every tier that needs a compositor or a long wall clock, and records what
+#           happened in reports/checks/<id>.json
+#   deb     builds and inspects the packages in Debian, and records those the same way
+#   gate    downloads both sets of records and runs the gdUnit4 gate, which fails when a check
+#           the register says CI runs has no recent passing record
+#
+# The gate is last because it is the thing that reports on everything else. It used to be
+# second of four steps in one job, and a green gate therefore said nothing at all about the 41
+# invocations outside tier 1 - including a capture scene that had been exiting 2 for five
+# rounds. tools/checks.json is the register; tools/run-checks.sh runs a tier of it and writes
+# the ledger; tests/unit/tools/check_registry_test.gd reads the ledger inside the gate.
+# One run per ref at a time. Without this every push - and every force-push while a
+# release is being fixed - starts another full run, and the superseded ones keep a
+# container and a nested compositor busy for their whole timeout.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install toolchain
+        run: |
+          pacman -Syu --noconfirm godot python python-pip git rsync sway wlroots mesa
+          pip install --break-system-packages "gdtoolkit==4.*"
+
+      - uses: actions/checkout@v4
+
+      # Every step below runs a tier of tools/checks.json, the register of every check this
+      # repository owns. It is not a stylistic preference: this workflow used to name four
+      # commands by hand and run one rendered scenario out of eleven, so the capture scenes
+      # under tests/ - including tests/unit/rooms/prop_frame_capture, which exits 2 rather
+      # than merely printing numbers - were run by nobody while the gate reported green.
+      # `tools/run-checks.sh list` prints the register; a check that CI cannot run has to say
+      # so in the register with a why_manual, and tests/unit/tools/check_registry_test.gd
+      # fails the gate when a tier that holds CI checks is not named here.
+      - name: Compile and style (tier "cheap")
+        run: tools/run-checks.sh cheap
+
+      # The whole of tier 2: every scenario in a dark theme and a light one, the 32-screen UI
+      # gallery, the capture scenes over their fixtures, and the weapon pose sheets.
+      # `if: always()` so a failure here still uploads the pictures - and the records - that
+      # show it.
+      - name: Rendered checks, nested headless sway (tier "rendered")
+        if: always()
+        run: |
+          export XDG_RUNTIME_DIR=/tmp/xdg
+          mkdir -p -m 0700 $XDG_RUNTIME_DIR
+          tools/run-checks.sh rendered
+
+      - name: Death, drop and teardown soak (tier "soak")
+        if: always()
+        run: tools/run-checks.sh soak
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: tests/out/*.png
+
+      # The ledger this job wrote. The gate job reads it; without it the gate cannot tell a
+      # check that passed from one nobody ran, and says so rather than assuming the best.
+      - name: Upload check results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-results-rendered
+          path: reports/checks/*.json
+          if-no-files-found: error
+
+  deb:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - name: Install toolchain
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            ca-certificates curl unzip xz-utils dpkg-dev fakeroot binutils
+          # The runtime libraries the packages depend on. They are installed
+          # here for two reasons: tools/check-deb-deps.sh can only map a SONAME
+          # to a package that is present, and apt refuses a name that does not
+          # exist, so this step doubles as a check that every package named in
+          # debian/control is really called that in Debian.
+          apt-get install -y --no-install-recommends \
+            libasound2t64 libdbus-1-3 libdecor-0-0 libegl1 libfontconfig1 \
+            libgl1 libgles2 libpulse0 libspeechd2 libudev1 libvulkan1 \
+            libwayland-client0 libwayland-cursor0 libwayland-egl1 libx11-6 \
+            libxcursor1 libxext6 libxi6 libxinerama1 libxkbcommon0 \
+            libxrandr2 libxrender1
+          # Godot 4 is not in the Debian archive, so fetch the upstream editor
+          # and export templates. tools/export.sh honours $GODOT_BIN.
+          curl -fsSL -o /tmp/godot.zip \
+            https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /usr/local/bin
+          mv /usr/local/bin/Godot_v4.7.1-stable_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+          curl -fsSL -o /tmp/templates.tpz \
+            https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          unzip -q /tmp/templates.tpz -d /tmp/templates
+          mv /tmp/templates/templates "$HOME/.local/share/godot/export_templates/4.7.1.stable"
+
+      - uses: actions/checkout@v4
+
+      # tier "package" of tools/checks.json: tools/deb.sh both, tools/check-deb-deps.sh
+      # --check, then tools/check-package-layout.sh - which unpacks each .deb without
+      # installing it, checks every installed path the .desktop file and the icon theme need,
+      # and runs the binary once headless with an empty HOME and no Omarchy state, judging it
+      # by its log because Godot's push_error() writes "ERROR:" and still exits 0. Those last
+      # two assertions used to be thirty lines of YAML in this file: real checks that nobody
+      # could run locally and that no register knew existed. The AppImage is in the register
+      # too, marked manual because it downloads appimagetool at build time.
+      - name: Build the packages and check them (tier "package")
+        run: tools/run-checks.sh package
+
+      - name: Inspect the packages
+        run: |
+          for deb in dist/*.deb; do
+            echo "::group::$deb"
+            dpkg-deb --info "$deb"
+            dpkg --contents "$deb"
+            echo "::endgroup::"
+          done
+
+      - name: Upload check results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-results-package
+          path: reports/checks/*.json
+          if-no-files-found: error
+
+      - name: Upload .deb packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: debian-packages
+          path: dist/*.deb
+          if-no-files-found: error
+
+  gate:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 30
+    # Last, and needing both: the gdUnit4 gate now fails when a check outside tier 1 has no
+    # recent passing record, so it has to run after the jobs that write those records.
+    needs: [checks, deb]
+    if: always()
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install toolchain
+        run: |
+          pacman -Syu --noconfirm godot python python-pip git rsync
+          pip install --break-system-packages "gdtoolkit==4.*"
+
+      - uses: actions/checkout@v4
+
+      # Both ledgers, merged into the one directory tools/checks.py reads. A record carries the
+      # plan it ran - the exact invocations the register asked for - so a record made against a
+      # different register is refused by the gate rather than counted.
+      - name: Collect the check results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: check-results-*
+          merge-multiple: true
+          path: reports/checks
+
+      - name: Unit and integration suites (tier "unit")
+        run: tools/run-checks.sh unit
+
+      - name: What the ledger says
+        if: always()
+        run: tools/run-checks.sh results

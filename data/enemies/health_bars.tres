@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyHpBarStyle" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_hp_bar_style.gd" id="1_style"]
+
+[resource]
+script = ExtResource("1_style")
+small_width = 14.0
+large_width = 22.0
+elite_width_scale = 1.35
+height = 2.0
+elite_height = 3.0
+border = 1.0
+gap = 4.0
+hide_delay = 4.0
+fade_time = 0.35
+backing_alpha = 0.85
+track_contrast = 2.0
+fill_contrast = 3.0
+world_contrast = 2.75

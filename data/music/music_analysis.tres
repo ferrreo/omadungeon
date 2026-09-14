@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MusicAnalysis" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/music/music_analysis.gd" id="1_music_analysis"]
+
+[resource]
+script = ExtResource("1_music_analysis")
+sample_interval = 0.05
+short_window = 1.5
+long_window = 40.0
+relative_span_db = 3.0
+silence_floor_db = -60.0
+analysis_min_gain = 0.5
+beat_threshold = 1.4
+beat_min_interval = 0.25
+beat_window = 1.0
+light_smoothing = 2.0

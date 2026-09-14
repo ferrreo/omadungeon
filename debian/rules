@@ -1,0 +1,118 @@
+#!/usr/bin/make -f
+#
+# Omadungeon is not compiled here in the usual sense: the whole game is one
+# Godot 4.7 export, a copy of the engine's Linux template with the project's
+# PCK appended to it. Everything below follows from that.
+#
+# The layout is produced by "tools/deb.sh --stage", which is also what the
+# standalone builder uses, so the debhelper path and the dpkg-deb-only path
+# cannot drift apart. tools/deb.sh needs nothing but dpkg-deb and is the
+# supported way to build these packages on a machine without debhelper.
+
+# The game's data lives in an allocated ELF section named "pck" that belongs to
+# no segment. strip(1) warns about exactly that ("allocated section `pck' not
+# in segment") and whether it survives depends on the binutils version and on
+# how the export attached it; remove that section and the binary starts and
+# then dies with "Couldn't load project data". The template Godot ships is
+# already stripped, so there is nothing to gain either way. Turn stripping off
+# for the whole build rather than only skipping the helper, so that a rebuild
+# with a hand-set DEB_BUILD_OPTIONS cannot quietly re-enable it.
+export DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) nostrip
+# Nothing is compiled from source in this package, so there are no compiler
+# flags for the hardening wrapper to act on.
+export DEB_BUILD_MAINT_OPTIONS = hardening=-all
+
+VERSION := $(shell dpkg-parsechangelog -l debian/changelog -S Version)
+NPROC   := $(shell nproc 2>/dev/null || echo 1)
+
+HAVE_DEBHELPER := $(shell command -v dh_testdir >/dev/null 2>&1 && echo yes)
+
+ifeq ($(HAVE_DEBHELPER),yes)
+
+# ---------------------------------------------------------------- dh path ---
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+# Export both presets here rather than letting the staging step do it lazily.
+# "godot --import" rescans the whole project, and by the time the second
+# variant would be exported the first one is already staged in
+# debian/omadungeon, so the scan would find the installed icons and drop
+# .import sidecars into the package. --export wraps tools/export.sh and
+# tolerates Godot 4.7 aborting on exit after the pack has been written, which
+# a bare tools/export.sh call here would not.
+override_dh_auto_build:
+	tools/deb.sh --export full
+	tools/deb.sh --export lite
+
+override_dh_auto_test:
+# The gdUnit4 suites need the Godot editor and a nested compositor; they are
+# run by tools/test.sh in CI, not at package build time.
+
+override_dh_auto_install:
+	tools/deb.sh --stage full debian/omadungeon
+	tools/deb.sh --stage lite debian/omadungeon-lite
+
+override_dh_auto_clean:
+	rm -rf export dist
+
+# See the nostrip note above. dh_strip would also try to split out a -dbgsym
+# package from a binary that carries no debug information at all.
+override_dh_strip:
+override_dh_strip_nondeterminism:
+override_dh_dwz:
+
+# The Godot export template links only against the C library and dlopen()s
+# X11, Wayland, GL, ALSA and udev at runtime, so dpkg-shlibdeps has nothing to
+# find. The Depends list in debian/control is derived from the binary by
+# tools/check-deb-deps.sh instead.
+override_dh_shlibdeps:
+
+# dh_compress would gzip CREDITS.md and LICENSE, which are meant to be read in
+# place. It never touches /usr/lib, so the 230 MB payload was never at risk.
+override_dh_compress:
+	dh_compress -X.md -XLICENSE
+
+# No postinst or postrm. The icon cache and the desktop database are refreshed
+# by the dpkg triggers that hicolor-icon-theme and desktop-file-utils already
+# ship, and dh_installdeb would generate the same scripts on older systems if
+# they were ever needed.
+
+# The payload is roughly 160 MB of already-compressed audio inside the PCK plus
+# the engine binary. xz -9 costs minutes and buys under two per cent over xz -1
+# on this input, so compress at -1 and use every core.
+override_dh_builddeb:
+	dh_builddeb -- -Zxz -z1 --threads-max=$(NPROC)
+
+else
+
+# ---------------------------------------------------- no-debhelper fallback ---
+#
+# dpkg-buildpackage still drives debian/rules through the Policy targets, so
+# implement them by delegating to tools/deb.sh. The .deb files land in the
+# parent directory where dpkg-buildpackage expects them, and debian/files is
+# written so that dpkg-genchanges can still produce a .changes file.
+
+build build-arch build-indep:
+# tools/deb.sh exports on demand; see override_dh_auto_build above.
+
+binary-arch binary: build
+	DEB_OUTPUT_DIR=.. tools/deb.sh both
+	printf '%s\n' \
+	  'omadungeon_$(VERSION)_amd64.deb games optional' \
+	  'omadungeon-lite_$(VERSION)_amd64.deb games optional' \
+	  > debian/files
+
+binary-indep:
+# Both binary packages are Architecture: amd64.
+
+clean:
+	rm -rf export dist debian/files debian/omadungeon debian/omadungeon-lite
+	rm -rf debian/.debhelper debian/tmp debian/debhelper-build-stamp
+	rm -f debian/*.substvars debian/*.debhelper.log debian/*.debhelper
+
+.PHONY: build build-arch build-indep binary binary-arch binary-indep clean
+
+endif

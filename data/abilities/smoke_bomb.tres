@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/actives/smoke_bomb.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(512, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"smoke_bomb"
+display_name = "Smoke Bomb"
+description = "A cloud that slows and weakens everything inside it, and speeds you up while it stands."
+kind = 0
+max_tier = 3
+class_only = &""
+weight = 1.0
+cooldown = 10.0
+damage = 0.0
+tags = Array[StringName]([&"ability"])
+radius = 56.0
+radius_per_tier = 8.0
+duration = 6.0
+duration_per_tier = 1.0
+slow_magnitude = 0.5
+weaken_magnitude = 0.45
+self_haste = 0.3
+icon = SubResource("AtlasTexture_icon")

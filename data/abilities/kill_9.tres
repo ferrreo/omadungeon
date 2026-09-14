@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/actives/kill_9.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(480, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"kill_9"
+display_name = "kill -9"
+description = "Signal the enemy nearest your aim: a heavy hit, far heavier on a wounded one."
+kind = 0
+max_tier = 3
+class_only = &""
+weight = 0.65
+cooldown = 9.0
+damage = 44.0
+tags = Array[StringName]([&"ability", &"arcane"])
+range_px = 120.0
+range_per_tier = 20.0
+execute_threshold = 0.35
+execute_multiplier = 2.5
+knockback = 120.0
+icon = SubResource("AtlasTexture_icon")

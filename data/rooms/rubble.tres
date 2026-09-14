@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RoomTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gen/room_template.gd" id="1_tpl"]
+
+[resource]
+script = ExtResource("1_tpl")
+id = &"rubble"
+pattern = &"rubble"
+weight = 1.2
+min_size = Vector2i(9, 7)
+allowed_types = Array[int]([1, 3, 8, 4])
+biome_weights = {
+&"crypt": 1.6,
+&"forge": 1.2,
+&"frost": 0.6,
+&"library": 0.5,
+&"void": 1.0,
+}
+allowed_biomes = Array[StringName]([])
+spacing = 3
+density = 0.6
+mask = ""

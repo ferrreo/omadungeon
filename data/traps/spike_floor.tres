@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TrapDef" load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://40iymcstuepy" path="res://src/traps/trap_def.gd" id="1_def"]
+[ext_resource type="PackedScene" uid="uid://bpsmukmm1d4oe" path="res://src/traps/spike_floor.tscn" id="2_scene"]
+[ext_resource type="Script" uid="uid://tvq547m2xfng" path="res://src/traps/spike_floor.gd" id="3_script"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"spike_floor"
+display_name = "Spike Floor"
+scene = ExtResource("2_scene")
+script_class = ExtResource("3_script")
+biomes = Array[StringName]([&"crypt", &"forge", &"frost", &"library", &"void"])
+is_hazard = false
+damage = 15.0
+knockback = 40.0
+telegraph_time = 0.5
+active_time = 0.4
+cooldown_time = 2.0
+duration = 0.0
+enemies_immune = false
+weight = 3.0

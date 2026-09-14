@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/bosses/the_suit.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/the_suit.png" id="3_tex"]
+[ext_resource type="Resource" path="res://data/enemies/honker.tres" id="4_hire_clowns"]
+[ext_resource type="Resource" path="res://data/enemies/manpage_hurler.tres" id="5_hire_greybeards"]
+[ext_resource type="Resource" path="res://data/enemies/distro_hopper.tres" id="6_hire_tinkerers"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"the_suit"
+display_name = "The Suit"
+faction = 3
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 32
+max_hp = 490.0
+damage = 47.0
+move_speed = 54.0
+armor = 6.0
+knockback_resistance = 1.0
+is_elite = false
+is_boss = true
+cost = 0.0
+min_floor = 8
+max_floor = 99
+gold_min = 300
+gold_max = 400
+weight = 0.0
+windup_time = 0.55
+attack_time = 0.5
+recover_time = 0.6
+attack_cooldown = 1.6
+attack_range = 220.0
+preferred_range = 120.0
+retreat_when_close = true
+ignores_pits = false
+body_radius = 9.0
+hurtbox_size = Vector2(18, 26)
+summon_defs = Array[ExtResource("1_def")]([ExtResource("4_hire_clowns"), ExtResource("5_hire_greybeards"), ExtResource("6_hire_tinkerers")])
+params = {
+"arena_radius": 112.0,
+"briefcase_count": 2,
+"briefcase_latches": 4,
+"briefcase_radius": 62.0,
+"coin_count": 5,
+"coin_damage_mult": 0.5,
+"coin_speed": 160.0,
+"coin_spread": 26.0,
+"coin_volleys": 3,
+"elite_extra_cap": 3,
+"elite_radius": 60.0,
+"heal_percent": 0.02,
+"phase_damage_step": 0.4,
+"phase_speed_step": 0.3,
+"hire_delay": 3.0,
+"hire_interval": 7.0,
+"hire_radius": 40.0,
+"hire_telegraph": 0.8,
+"seize_time": 26.0,
+"shrink_time": 30.0,
+"summon_cap": 6,
+"zone_damage_mult": 0.35,
+"zone_telegraph": 1.5,
+"zone_tick": 0.75
+}

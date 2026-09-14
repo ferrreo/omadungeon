@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ClassDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/player/class_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"wizard"
+display_name = "Wizard"
+description = "Abilities, cooldown scaling, fragile. Homing staff bolts; blink three tiles."
+vitality = 4
+might = 0
+precision = 2
+arcana = 7
+swiftness = 4
+fortune = 3
+start_weapon_id = &"staff"
+innate_passive_id = &"overflow"
+class_active_id = &"chain_lightning"
+extra_ability_ids = Array[StringName]([])
+start_gold = 0
+dodge_style = 2
+sprite_sheet = "res://assets/sprites/player/wizard.png"
+portrait = "res://assets/sprites/player/wizard_portrait.png"

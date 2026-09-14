@@ -1,0 +1,16 @@
+omadungeon (0.1.0-1) unstable; urgency=medium
+
+  * Initial release.
+  * Ship the Godot 4.7 export as a self-contained binary with an embedded PCK
+    in /usr/lib/omadungeon/omadungeon, with a symlink at /usr/bin/omadungeon,
+    matching the layout of packaging/PKGBUILD.
+  * Install the desktop entry, the AppStream metainfo and hicolor icons at
+    16, 32, 48, 64, 128 and 256 pixels.
+  * Add the omadungeon-lite binary package: the same game built from the
+    "Linux x86_64 (lite, no music)" export preset, without the bundled
+    Omarchy Radio soundtrack. It conflicts with and replaces omadungeon.
+  * Derive the runtime dependencies from the exported binary's dlopen set
+    rather than from its ELF NEEDED list, which only names the C library;
+    tools/check-deb-deps.sh regenerates and verifies the list.
+
+ -- ferreo <ferreo@pika-os.com>  Sat, 12 Sep 2026 02:01:51 +0100

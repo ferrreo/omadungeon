@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://src/entities/enemies/enemy_def.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/bosses/ringmaster.tscn" id="2_scene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/ringmaster.png" id="3_tex"]
+[ext_resource type="Resource" path="res://data/enemies/juggler.tres" id="4_juggler"]
+[ext_resource type="Resource" path="res://data/enemies/honker.tres" id="5_honker"]
+[ext_resource type="Resource" path="res://data/enemies/clown_car.tres" id="6_clown_car"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"ringmaster"
+display_name = "The Ringmaster"
+faction = 0
+scene = ExtResource("2_scene")
+texture = ExtResource("3_tex")
+sprite_size = 32
+max_hp = 420.0
+damage = 37.0
+move_speed = 58.0
+armor = 6.0
+knockback_resistance = 0.85
+is_elite = false
+is_boss = true
+cost = 0.0
+min_floor = 2
+max_floor = 99
+gold_min = 150
+gold_max = 400
+weight = 0.0
+windup_time = 0.55
+attack_time = 0.2
+recover_time = 0.8
+attack_cooldown = 1.4
+attack_range = 100.0
+preferred_range = 64.0
+retreat_when_close = false
+ignores_pits = false
+body_radius = 9.0
+hurtbox_size = Vector2(20, 26)
+summon_defs = Array[ExtResource("1_def")]([ExtResource("4_juggler"), ExtResource("5_honker"), ExtResource("6_clown_car")])
+params = {
+"phase_damage_step": 0.35,
+"phase_speed_step": 0.25,
+"summon_interval": 7.0,
+"summon_count": 2,
+"summon_cap": 4,
+"arena_radius": 104.0,
+"whip_reach": 88.0,
+"whip_width": 11.0,
+"whip_telegraph": 0.45,
+"whip_pull": 280.0,
+"whip_sweep_time": 1.2,
+"fire_segments": 16,
+"fire_gap_slots": 3,
+"fire_spin": 0.45,
+"fire_telegraph": 1.0,
+"confetti_lanes": 14,
+"confetti_safe_lanes": 3,
+"confetti_waves": 3
+}

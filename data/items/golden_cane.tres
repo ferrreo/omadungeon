@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="WeaponBase" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/items/weapon_base.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/weapons.png" id="2"]
+[ext_resource type="Resource" path="res://data/items/skills/bribe.tres" id="3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1"]
+atlas = ExtResource("2")
+region = Rect2(160, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"golden_cane"
+display_name = "Golden Cane"
+slot = 0
+icon = SubResource("AtlasTexture_1")
+implicit_flat = {
+&"armor": 5.0,
+&"fortune": 2.0
+}
+implicit_percent = {}
+min_floor = 0
+weight = 0.6
+proc_sprite_family = &""
+style = 0
+base_damage = 9.0
+attacks_per_second = 2.2
+range_px = 18.0
+knockback = 50.0
+tags = Array[StringName]([&"melee", &"physical"])
+projectile_speed = 220.0
+combo_length = 2
+skill = ExtResource("3")

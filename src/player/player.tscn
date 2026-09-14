@@ -1,0 +1,88 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://src/player/player.gd" id="1"]
+[ext_resource type="Script" path="res://src/player/player_health.gd" id="2"]
+[ext_resource type="Script" path="res://src/player/player_input.gd" id="3"]
+[ext_resource type="Script" path="res://src/player/weapon_controller.gd" id="4"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="5"]
+[ext_resource type="Shader" path="res://src/player/flash.gdshader" id="6"]
+[ext_resource type="Script" path="res://src/abilities/ability_slots.gd" id="7"]
+
+[sub_resource type="CapsuleShape2D" id="body_capsule"]
+radius = 4.0
+height = 12.0
+
+[sub_resource type="ShaderMaterial" id="flash_material"]
+shader = ExtResource("6")
+shader_parameter/flash = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CircleShape2D" id="hitbox_circle"]
+radius = 10.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 4097
+motion_mode = 1
+script = ExtResource("1")
+team = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("body_capsule")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="AbilitySlots" type="Node" parent="."]
+script = ExtResource("7")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+material = SubResource("flash_material")
+position = Vector2(0, -2)
+
+[node name="WeaponPivot" type="Node2D" parent="."]
+position = Vector2(0, -4)
+
+[node name="WeaponController" type="Node2D" parent="WeaponPivot"]
+script = ExtResource("4")
+
+[node name="Arm" type="Node2D" parent="WeaponPivot/WeaponController"]
+
+[node name="Hand" type="Node2D" parent="WeaponPivot/WeaponController/Arm"]
+position = Vector2(5, 3)
+
+[node name="WeaponSprite" type="Sprite2D" parent="WeaponPivot/WeaponController/Arm/Hand"]
+
+[node name="Hitbox" type="Area2D" parent="WeaponPivot/WeaponController"]
+collision_layer = 0
+collision_mask = 4112
+monitoring = false
+monitorable = false
+script = ExtResource("5")
+team = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponPivot/WeaponController/Hitbox"]
+position = Vector2(8, 0)
+shape = SubResource("hitbox_circle")
+
+[node name="Light" type="PointLight2D" parent="."]
+energy = 0.7
+shadow_enabled = false
+texture_scale = 1.5
+
+[node name="DodgeDust" type="CPUParticles2D" parent="."]
+position = Vector2(0, 4)
+emitting = false
+amount = 8
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+spread = 35.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 18.0
+initial_velocity_max = 40.0
+scale_amount_min = 1.0
+scale_amount_max = 2.0

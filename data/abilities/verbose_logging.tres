@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/abilities/passives/stat_passive.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ability_icons.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2")
+region = Rect2(704, 0, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = &"verbose_logging"
+display_name = "Verbose Logging"
+description = "Everything is written down: +40% gold find and +0.3 luck."
+kind = 1
+max_tier = 3
+class_only = &""
+weight = 1.3
+percent_stats = Array[StringName]([])
+percent_values = PackedFloat32Array()
+flat_stats = Array[StringName]([&"gold_find", &"luck"])
+flat_values = PackedFloat32Array(0.4, 0.3)
+icon = SubResource("AtlasTexture_icon")

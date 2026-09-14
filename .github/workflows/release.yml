@@ -1,0 +1,206 @@
+name: Release
+
+# Cuts a release from a tag: push `v0.1.0` and this builds the three artefacts people
+# actually install and attaches them to the GitHub release.
+#
+#   .deb        built in Debian, so the binary links against the oldest glibc we support
+#   .pkg.tar.zst  built in Arch, from the same PKGBUILD the AUR would use
+#   .AppImage   built in Debian alongside the .deb, from the same exported binary
+#
+# Only the full package is published. The lite variant exists for local iteration (it drops
+# the bundled radio tracks to build in seconds) and is not something to hand a player.
+#
+# `workflow_dispatch` is here so a release can be rebuilt without moving a tag.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build and release (e.g. v0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+# One run per ref at a time. Without this every push - and every force-push while a
+# release is being fixed - starts another full run, and the superseded ones keep a
+# container and a nested compositor busy for their whole timeout.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Debian gives us the .deb and the AppImage from one export. Building the binary in the
+  # oldest reasonable environment is the point: a Godot binary exported on Arch links a
+  # newer glibc and then refuses to start on Debian stable.
+  debian:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    container: debian:bookworm
+    steps:
+      - name: Install toolchain
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            ca-certificates curl unzip git dpkg-dev fakeroot file \
+            python3 libfuse2 desktop-file-utils binutils
+
+      - uses: actions/checkout@v4
+
+      - name: Install Godot
+        run: |
+          curl -fsSL -o /tmp/godot.zip \
+            "https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          install -Dm755 /tmp/godot/Godot_v4.7.1-stable_linux.x86_64 /usr/local/bin/godot
+          godot --version
+
+      - name: Install export templates
+        run: |
+          curl -fsSL -o /tmp/templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz"
+          mkdir -p /tmp/tpl && unzip -q /tmp/templates.tpz -d /tmp/tpl
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.1.stable"
+          mv /tmp/tpl/templates/* "$HOME/.local/share/godot/export_templates/4.7.1.stable/"
+
+      # The import has to happen before the export or the class cache is empty and scripts
+      # with a class_name fail to resolve. tools/godot-import.sh exists because the
+      # importer intermittently dumps core on a font; it retries.
+      - name: Import project
+        run: tools/godot-import.sh .
+
+      - name: Build .deb (full)
+        run: tools/deb.sh full
+
+      - name: Build AppImage
+        run: tools/appimage.sh
+
+      # Two questions worth asking of a thing about to be handed to players: does it install
+      # on a clean Debian, and does it start. Installing the package proves the Depends list
+      # resolves and pulls in the runtime libraries the smoke run needs - the build image has
+      # a toolchain and none of libwayland, libgl or libasound - and the layout check then
+      # launches the installed binary headless with an empty HOME.
+      #
+      # What is deliberately NOT here is check-deb-deps.sh: it asks whether debian/control
+      # still matches what the binary links against, which is a question for a developer who
+      # needs to update the control file, and CI on main already asks it. A release should not
+      # fail because a dependency list could be tidier.
+      - name: Install the package and smoke-test it
+        run: |
+          apt-get install -y ./dist/omadungeon_*.deb
+          # Named explicitly: the script defaults to both variants and only the full one is
+          # built here, so the bare command would fail on a missing lite package.
+          tools/check-package-layout.sh omadungeon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debian
+          path: |
+            dist/omadungeon_*.deb
+            Omadungeon-x86_64.AppImage
+          if-no-files-found: error
+
+  arch:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install toolchain
+        run: |
+          pacman -Syu --noconfirm base-devel godot git sudo curl unzip
+          # makepkg refuses to run as root, so everything below happens as `builder` - which
+          # has to exist before the templates are installed into its home.
+          useradd -m builder
+
+      - uses: actions/checkout@v4
+
+      # Arch's godot package ships no export templates, and the version it ships moves
+      # (4.7.2 at the time of writing, while the Debian job pins 4.7.1). Godot refuses to
+      # export unless the templates match its own version exactly, so read the version out
+      # of the binary rather than hardcoding one that will rot.
+      - name: Install matching export templates
+        run: |
+          version="$(godot --version | head -1 | cut -d. -f1-4)"   # e.g. 4.7.2.stable
+          tag="$(echo "$version" | sed 's/\.stable$/-stable/')"     # e.g. 4.7.2-stable
+          echo "godot reports $version, fetching templates for $tag"
+          curl -fsSL -o /tmp/templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${tag}/Godot_v${tag}_export_templates.tpz"
+          mkdir -p /tmp/tpl && unzip -q /tmp/templates.tpz -d /tmp/tpl
+          # makepkg builds as `builder`, so the templates have to live in that user's home.
+          dest="/home/builder/.local/share/godot/export_templates/${version}"
+          mkdir -p "$dest"
+          mv /tmp/tpl/templates/* "$dest/"
+          chown -R builder:builder /home/builder/.local
+          ls "$dest" | head -3
+
+      - name: Build package
+        run: |
+          chown -R builder:builder .
+          cp packaging/PKGBUILD .
+          # Build the checkout we are standing in rather than fetching the tag from
+          # GitHub: that way a workflow_dispatch rebuild and a tag build produce the same
+          # bytes, and a release can be cut before the tag is reachable.
+          sudo -u builder sed -i \
+            -e "s|^source=.*|source=()|" \
+            -e "s|^sha256sums=.*|sha256sums=()|" \
+            -e "s|cd \"\$srcdir/\$pkgname\"|cd \"$GITHUB_WORKSPACE\"|" \
+            PKGBUILD
+          # makepkg otherwise also emits an omadungeon-debug package, which for an exported
+          # Godot binary holds nothing worth shipping and only clutters a release page. The
+          # option belongs in the PKGBUILD; passing it on the command line is not a thing
+          # makepkg accepts.
+          sudo -u builder sed -i "/^license=/a options=(!debug !strip)" PKGBUILD
+          sudo -u builder makepkg -f --noconfirm --nodeps
+          rm -f ./*-debug-*.pkg.tar.zst
+          ls -lh ./*.pkg.tar.zst
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: arch
+          path: ./*.pkg.tar.zst
+          if-no-files-found: error
+
+  release:
+    # A hung step otherwise sits for GitHub's six-hour default; the nested
+    # compositor and the engine's Wayland teardown race can both do that.
+    timeout-minutes: 15
+    needs: [debian, arch]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect
+        run: |
+          mkdir -p out
+          find artifacts -type f \( -name '*.deb' -o -name '*.AppImage' -o -name '*.pkg.tar.zst' \) \
+            -exec cp {} out/ \;
+          ls -lh out
+          (cd out && sha256sum ./* > SHA256SUMS)
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: Omadungeon ${{ github.event.inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          files: out/*
+          body: |
+            A rogue-like that steals its colours from your desktop.
+
+            **Arch** — `sudo pacman -U omadungeon-*-x86_64.pkg.tar.zst`
+
+            **AppImage** — `chmod +x Omadungeon-x86_64.AppImage && ./Omadungeon-x86_64.AppImage`
+            (needs FUSE 2; if your distro has dropped it, run
+            `./Omadungeon-x86_64.AppImage --appimage-extract` and then `./squashfs-root/AppRun`)
+
+            **Debian, Ubuntu, PikaOS** — there is a `.deb` below.
+
+            The music is the [Omarchy Radio](https://radio.omarchy.org) playlist, credited
+            per track in `docs/CREDITS.md`.
