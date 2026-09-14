@@ -1,3 +1,11 @@
+omadungeon (0.1.3-1) unstable; urgency=medium
+
+  * A desktop theme swap no longer pauses at the end: theme writes happen with
+    the theme detached from its controls, so eighty theme items no longer notify
+    every Control eighty times. 4.9 s of stall became one 83 ms frame.
+
+ -- ferrreo <harderthanfire@gmail.com>  Mon, 15 Sep 2026 00:20:00 +0100
+
 omadungeon (0.1.2-1) unstable; urgency=medium
 
   * A desktop theme swap no longer stalls the game for seconds: the UI theme is
