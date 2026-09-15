@@ -39,7 +39,15 @@ jobs:
           # permission failures"), which is what the rendered tier runs inside. It is an
           # optional dependency of sway, so a container gets neither it nor a warning that
           # matters until the compositor fails to come up.
-          pacman -Syu --noconfirm godot python python-pip git rsync sway mesa seatd
+          pacman -Syu --noconfirm godot python python-pip git rsync sway mesa seatd libcap
+          # Arch ships sway with file capabilities. A container runs with a reduced capability
+          # bounding set, and exec of a file whose capabilities cannot be honoured fails
+          # outright: "/usr/sbin/sway: Operation not permitted", before a line of its own log.
+          # The rendered tier runs sway headless (WLR_BACKENDS=headless), where it needs none
+          # of them, so dropping them is the fix rather than granting the container more.
+          setcap -r "$(command -v sway)" 2>/dev/null || true
+          getcap "$(command -v sway)" || echo "sway carries no file capabilities"
+          ls -l "$(command -v sway)"
           pip install --break-system-packages "gdtoolkit==4.*"
 
       - uses: actions/checkout@v4
