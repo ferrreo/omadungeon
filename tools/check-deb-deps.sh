@@ -96,21 +96,45 @@ resolve_soname() {
 # Ask dpkg which package owns a path. dpkg -S prints "diversion by ..." lines
 # first when a path is diverted (glx-diversions on hybrid-graphics systems), so
 # take the last "package: /path" line instead of the first.
-# The trailing `|| true` is load-bearing. `grep -v` exits 1 when it filters every line away,
-# which happens whenever dpkg does not own the library at all, and under `set -o pipefail`
-# that fails the whole pipeline and `set -e` then kills the script - silently, in the middle
-# of the table, before a single comparison is printed. Every library on a developer's machine
-# is dpkg-owned, so this only ever fired in a container: CI showed a bare table header and
-# "FAILED exit 1" with no reason. An unowned path is a normal answer here, not an error; the
-# caller already handles the empty string by printing "(unowned)".
+# Ask dpkg which package owns a path.
+#
+# Two things make that harder than it sounds. dpkg -S prints "diversion by ..." lines first
+# when a path is diverted (glx-diversions on hybrid-graphics systems), so the last
+# "package: /path" line is the answer rather than the first.
+#
+# And the path has to be the one dpkg recorded. Under usrmerge `/lib` is a symlink to
+# `/usr/lib`, `ldconfig -p` may hand back either spelling, and dpkg only knows the one it
+# installed - so a lookup for `/lib/x86_64-linux-gnu/libasound.so.2` finds nothing on a
+# Debian container while the identical file under `/usr/lib/...` is owned by libasound2t64.
+# That produced a whole table of "(unowned)" in CI and a mismatch against every stanza.
+# Both spellings are tried, canonical first.
+#
+# The trailing `|| true` is load-bearing too: `grep -v` exits 1 when it filters every line
+# away, and under `set -o pipefail` that fails the pipeline and `set -e` kills the script
+# without printing why. An unowned path is a normal answer; the caller prints "(unowned)".
 owning_package() {
-  {
-    dpkg -S "$1" 2>/dev/null \
-      | grep -v '^diversion by ' \
-      | sed -n 's/^\([^ :]*\):.*/\1/p' \
-      | sed 's/:.*$//' \
-      | tail -n 1
-  } || true
+  local path="$1" canonical alternate found
+  canonical="$(readlink -f "$path" 2>/dev/null || echo "$path")"
+  case "$canonical" in
+    /usr/*) alternate="${canonical#/usr}" ;;
+    *)      alternate="/usr$canonical" ;;
+  esac
+  for candidate in "$canonical" "$path" "$alternate"; do
+    [[ -n "$candidate" ]] || continue
+    found="$(
+      {
+        dpkg -S "$candidate" 2>/dev/null \
+          | grep -v '^diversion by ' \
+          | sed -n 's/^\([^ :]*\):.*/\1/p' \
+          | sed 's/:.*$//' \
+          | tail -n 1
+      } || true
+    )"
+    if [[ -n "$found" ]]; then
+      printf '%s' "$found"
+      return 0
+    fi
+  done
 }
 
 # --- collect SONAMEs -------------------------------------------------------
