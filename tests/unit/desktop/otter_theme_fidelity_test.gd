@@ -56,7 +56,8 @@ func before_test() -> void:
 	OS.set_environment("XDG_CONFIG_HOME", ProjectSettings.globalize_path(FIXTURE + "/config"))
 	# The owner has no `~/.local/state/omarchy` at all: otter-shell is the only colour source.
 	OS.set_environment(
-		"OMADUNGEON_OMARCHY_STATE_DIR", OS.get_user_data_dir().path_join("no-omarchy-here")
+		"OMADUNGEON_OMARCHY_STATE_DIR",
+		ProjectSettings.globalize_path(SaveManager.test_sandbox_dir()).path_join("no-omarchy-here")
 	)
 	OS.set_environment("XDG_RUNTIME_DIR", _runtime_dir())
 
@@ -70,7 +71,11 @@ func after_test() -> void:
 ## `# otter-theme-gen-palette:` comment and both monitor lines - with the two absolute paths
 ## pointed at the checked-in fixture image.
 func _runtime_dir() -> String:
-	var dir := OS.get_user_data_dir().path_join("otter-fidelity")
+	# The per-process sandbox, not the user directory: that one is shared by every concurrent
+	# run, and `user_dir_isolation_test` fails any suite that reaches into it.
+	var dir := ProjectSettings.globalize_path(SaveManager.test_sandbox_dir()).path_join(
+		"otter-fidelity"
+	)
 	DirAccess.make_dir_recursive_absolute(dir.path_join("otter-shell"))
 	var image := ProjectSettings.globalize_path(WALLPAPER)
 	var file := FileAccess.open(dir.path_join("otter-shell/wallpaper-state"), FileAccess.WRITE)

@@ -837,13 +837,13 @@ func _record_mood_line(label: String) -> void:
 	_music_lines.append(_measure_line(label, _music_file))
 
 
-## The track-change series must brighten or hold between every pair of frames.
+## Fails the scenario when the series is not what a track change looks like; the rule and the
+## reasoning live in `ScenarioMusicRules`.
 func _require_monotonic_luminance() -> void:
-	for i in range(1, _music_luminances.size()):
-		require(
-			_music_luminances[i] >= _music_luminances[i - 1] - 0.002,
-			"luminance fell between frames %d and %d: not a monotonic crossfade" % [i - 1, i]
-		)
+	var fault := ScenarioMusicRules.fault_in_change(
+		_music_luminances, CHANGE_FRAMES, MusicMoodLevers.shared().crossfade_seconds
+	)
+	require(fault.is_empty(), fault)
 
 
 ## One frame of the track-change series: the PNG just written read back for the strip, its
@@ -937,17 +937,9 @@ func _write_lines(name: String, lines: PackedStringArray) -> void:
 
 ## Six frames side by side at a third of their size: the strip a reviewer reads at a glance.
 func _write_strip(frames: Array[Image], name: String = "music_change_strip") -> void:
-	if frames.is_empty():
-		return
-	var w := frames[0].get_width() / 3
-	var h := frames[0].get_height() / 3
-	var strip := Image.create(w * frames.size(), h, false, Image.FORMAT_RGBA8)
-	for i in frames.size():
-		var small := frames[i].duplicate() as Image
-		small.convert(Image.FORMAT_RGBA8)
-		small.resize(w, h, Image.INTERPOLATE_BILINEAR)
-		strip.blit_rect(small, Rect2i(0, 0, w, h), Vector2i(w * i, 0))
-	write_shot(strip, screenshot_path(name))
+	var strip := ScenarioStrip.build(frames)
+	if strip != null:
+		write_shot(strip, screenshot_path(name))
 
 
 # ---------------------------------------------------------------- helpers

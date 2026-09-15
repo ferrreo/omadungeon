@@ -96,12 +96,21 @@ resolve_soname() {
 # Ask dpkg which package owns a path. dpkg -S prints "diversion by ..." lines
 # first when a path is diverted (glx-diversions on hybrid-graphics systems), so
 # take the last "package: /path" line instead of the first.
+# The trailing `|| true` is load-bearing. `grep -v` exits 1 when it filters every line away,
+# which happens whenever dpkg does not own the library at all, and under `set -o pipefail`
+# that fails the whole pipeline and `set -e` then kills the script - silently, in the middle
+# of the table, before a single comparison is printed. Every library on a developer's machine
+# is dpkg-owned, so this only ever fired in a container: CI showed a bare table header and
+# "FAILED exit 1" with no reason. An unowned path is a normal answer here, not an error; the
+# caller already handles the empty string by printing "(unowned)".
 owning_package() {
-  dpkg -S "$1" 2>/dev/null \
-    | grep -v '^diversion by ' \
-    | sed -n 's/^\([^ :]*\):.*/\1/p' \
-    | sed 's/:.*$//' \
-    | tail -n 1
+  {
+    dpkg -S "$1" 2>/dev/null \
+      | grep -v '^diversion by ' \
+      | sed -n 's/^\([^ :]*\):.*/\1/p' \
+      | sed 's/:.*$//' \
+      | tail -n 1
+  } || true
 }
 
 # --- collect SONAMEs -------------------------------------------------------
