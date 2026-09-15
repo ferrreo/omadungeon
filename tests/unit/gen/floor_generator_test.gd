@@ -208,8 +208,11 @@ func test_performance_100_floors_under_3_seconds() -> void:
 		var data := FloorGenerator.generate(GenParams.from_profile(profile, floor_index), rng)
 		assert_bool(data.rooms.is_empty()).is_false()
 	var elapsed := Time.get_ticks_msec() - start
-	print("100 floors generated in %d ms" % elapsed)
-	assert_int(elapsed).is_less(3000)
+	# The bound is a statement about a player's machine; a shared runner gets
+	# `PerfBudget.allowance` (see there for the measurements that made it necessary).
+	var allowed := PerfBudget.allowance(3.0) * 1000.0
+	print("100 floors generated in %d ms (budget %d ms)" % [elapsed, int(allowed)])
+	assert_float(float(elapsed)).is_less(allowed)
 
 
 func test_print_one_floor_for_eyeballing() -> void:
