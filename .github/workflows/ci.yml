@@ -72,6 +72,13 @@ jobs:
         run: |
           export XDG_RUNTIME_DIR=/tmp/xdg
           mkdir -p -m 0700 $XDG_RUNTIME_DIR
+          # The defaults (300 s) are set for a developer's machine. A hosted runner has no GPU
+          # and shares its cores, so a capture that takes seconds here takes minutes there and
+          # was being killed by its own deadline ("ui-stats -> exit 124") rather than failing
+          # on anything it measured. The deadline still exists to catch a hang; it just has to
+          # be longer than a slow success.
+          export CAPTURE_TIMEOUT=900
+          export SCENARIO_TIMEOUT=900
           tools/run-checks.sh rendered
 
       - name: Death, drop and teardown soak (tier "soak")

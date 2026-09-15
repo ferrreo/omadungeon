@@ -20,3 +20,13 @@ static func loose(view: Node) -> Array[Node]:
 		if live_drop and not node.is_queued_for_deletion():
 			out.append(node)
 	return out
+
+
+## What is still lying there, by class and name, so a failure names the thing that would not be
+## picked up instead of only counting it.
+static func names(loot: Array[Node]) -> String:
+	var out := PackedStringArray()
+	for node: Node in loot:
+		if is_instance_valid(node):
+			out.append(node.get_class() + "/" + str(node.name))
+	return ", ".join(out)

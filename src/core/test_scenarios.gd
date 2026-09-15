@@ -53,7 +53,10 @@ const SLAY_SWING_FRAMES := 8
 ## Swings `loot_drop` gives a room before it calls the pack unreachable.
 const SLAY_SWINGS := 24
 ## Sweeps `loot_drop` makes over the floor picking drops up.
-const COLLECT_PASSES := 4
+## A drop refuses collection until it is `PickupBase.settle_time` old (0.25 s, fifteen physics
+## ticks) and each drop gets three, so four passes was enough here and not on a runner: "5 drops
+## were still on the floor after walking over every one". Passes are cheap.
+const COLLECT_PASSES := 10
 
 ## What each scenario exists to capture. A scenario with no entry here is one nobody can say
 ## is broken, so `_run` refuses to shoot it.
@@ -433,7 +436,10 @@ func _scenario_loot_drop() -> void:
 	await _collect_loot()
 	if not require(
 		_loose_loot().is_empty(),
-		"%d drops were still on the floor after walking over every one" % _loose_loot().size()
+		(
+			"%d drops were still on the floor after walking over every one: %s"
+			% [_loose_loot().size(), ScenarioLoot.names(_loose_loot())]
+		)
 	):
 		return
 	var standing := live_room(room)
@@ -536,6 +542,9 @@ func _collect_loot() -> void:
 		var loot := _loose_loot()
 		if loot.is_empty():
 			break
+		# Let whatever is still settling reach `settle_time` before walking the floor again.
+		if _pass > 0:
+			await _physics_frames(SETTLE_FRAMES)
 		for node: Node in loot:
 			# Both ends are re-checked after every wait: the drop may have been collected or
 			# the floor torn down since the list was taken.
