@@ -525,21 +525,8 @@ func _nearest_enemy(room: RoomNode) -> Node2D:
 	return best
 
 
-## Every drop still lying on the floor: the homing pickups (gold, hearts, stat orbs) and the
-## item drops an elite leaves, which are different node families in different parents.
 func _loose_loot() -> Array[Node]:
-	var out: Array[Node] = []
-	var view := RunManager.game as Game
-	if view == null or not is_instance_valid(view):
-		return out
-	for node: Node in view.find_children("", "Area2D", true, false):
-		var live_drop := (
-			(node is PickupBase and not (node as PickupBase).is_collected())
-			or (node is ItemPickup and (node as ItemPickup).item != null)
-		)
-		if live_drop and not node.is_queued_for_deletion():
-			out.append(node)
-	return out
+	return ScenarioLoot.loose(RunManager.game as Game)
 
 
 ## Walks the player onto every drop until the floor is clean. Homing pickups collect on
@@ -570,12 +557,24 @@ func _collect_loot() -> void:
 			var drop := node as ItemPickup
 			if drop == null or not drop.can_interact():
 				continue
-			live = RunManager.player()
+			live = await _player_again()
 			if live == null:
+				require(false, "the player went away while the loot was being collected")
 				return
 			drop.interact(live)
 			await _physics_frames(2)
 	await _physics_frames(SETTLE_FRAMES)
+
+
+## The player, re-asked with one retry. `RunManager.player()` can be null for a frame while a
+## room hands over, and `_collect_loot` used to take that as "give up" - silently - so the
+## scenario failed later as "never reached a killed pack's loot" without saying why.
+func _player_again() -> Node2D:
+	var live := RunManager.player()
+	if live != null:
+		return live
+	await _physics_frames(2)
+	return RunManager.player()
 
 
 ## Pause menu over a live floor.
