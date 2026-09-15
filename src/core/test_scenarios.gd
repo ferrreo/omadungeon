@@ -539,8 +539,16 @@ func _collect_loot() -> void:
 		for node: Node in loot:
 			# Both ends are re-checked after every wait: the drop may have been collected or
 			# the floor torn down since the list was taken.
+			# A player can be absent for a frame while a room hands over, so a null is waited
+			# out once rather than taken as "give up". The wait happens here, before this
+			# iteration touches `node`, and `live` is read *after* it: holding either across an
+			# await is what `freed_instance_test` fails and what a SIGSEGV would punish.
 			var live := RunManager.player()
 			if live == null:
+				await _physics_frames(2)
+				live = RunManager.player()
+			if live == null:
+				require(false, "the player went away while the loot was being collected")
 				return
 			if not is_instance_valid(node) or node.is_queued_for_deletion():
 				continue
@@ -557,24 +565,15 @@ func _collect_loot() -> void:
 			var drop := node as ItemPickup
 			if drop == null or not drop.can_interact():
 				continue
-			live = await _player_again()
+			# Re-read without waiting: `drop` is live right now and must stay that way until
+			# `interact`, so nothing may await between the two.
+			live = RunManager.player()
 			if live == null:
 				require(false, "the player went away while the loot was being collected")
 				return
 			drop.interact(live)
 			await _physics_frames(2)
 	await _physics_frames(SETTLE_FRAMES)
-
-
-## The player, re-asked with one retry. `RunManager.player()` can be null for a frame while a
-## room hands over, and `_collect_loot` used to take that as "give up" - silently - so the
-## scenario failed later as "never reached a killed pack's loot" without saying why.
-func _player_again() -> Node2D:
-	var live := RunManager.player()
-	if live != null:
-		return live
-	await _physics_frames(2)
-	return RunManager.player()
 
 
 ## Pause menu over a live floor.
